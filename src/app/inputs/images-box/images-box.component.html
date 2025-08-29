@@ -1,0 +1,19 @@
+<div *ngIf="!isBeingCreated">
+    <label>{{titleValue}}</label>
+    <br/>
+    <input
+        type="file"
+        id="fileInput"
+        (change)="onImageSelect($event)"
+        accept="image/*"
+        multiple
+    />
+    <div>
+        <app-image-slave *ngFor="let item of images" [imageSrc]="item" [imgName]="item.name"></app-image-slave>
+    </div>
+</div>
+<div *ngIf="isBeingCreated">
+    <input type="text" [(ngModel)]="titleValue"/>
+    <br/>
+    <input type="file" id="imageInput" accept="image/*" disabled>
+</div>

@@ -1,0 +1,12 @@
+<div *ngIf="!isBeingCreated">
+    <label class="title">{{ titleValue }}</label>
+    <br/>
+    <input id="simpleTextInput" type="text" [(ngModel)]="value"/>
+</div>
+<div *ngIf="isBeingCreated">
+    <input type="text" placeholder="Nazwa nagłówka" [(ngModel)]="titleValue"/>
+    <br/>
+    <input type="text" placeholder="Wartość" disabled="true"/>
+    <br/>
+    <input type="checkbox" value="isNumberValue"/> <label>Wartość liczbowa</label>
+</div>
