@@ -1,10 +1,12 @@
-<div *ngIf="!isBeingCreated">
-    <label class="title">{{ titleValue }}</label>
-    <br/>
-    <textarea id="simpleTextInput" type="text" [(ngModel)]="value"></textarea>
-</div>
-<div *ngIf="isBeingCreated">
-    <input type="text" placeholder="Nazwa nagłówka" [(ngModel)]="titleValue"/>
-    <br/>
-    <textarea type="text" placeholder="Wartość" disabled="true"></textarea>
+<div class="textAreaComponent">
+    <div *ngIf="!isBeingCreated">
+        <label class="title">{{ titleValue }}</label>
+        <br/>
+        <textarea id="simpleTextInput" type="text" [(ngModel)]="value"></textarea>
+    </div>
+    <div *ngIf="isBeingCreated">
+        <input type="text" placeholder="Nazwa nagłówka" [(ngModel)]="titleValue" style="margin-bottom: 10px;"/>
+        <br/>
+        <textarea type="text" placeholder="Wartość" disabled="true"></textarea>
+    </div>
 </div>

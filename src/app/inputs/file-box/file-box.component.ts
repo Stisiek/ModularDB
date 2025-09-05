@@ -12,7 +12,7 @@ export class FileBoxComponent {
   @Input() isBeingCreated = false;
   fileNames: string[] = [];
 
-  titleValue = 'Opis pliku';
+  titleValue = 'Nagłówek pliku';
 
   onFileSelected(value: any) {
     this.fileNames = [];
@@ -20,6 +20,14 @@ export class FileBoxComponent {
       let val = value.target.files[item];
       if (val.name === undefined) break;
       this.fileNames.push(val.name);
+    }
+  }
+
+  fileClicked(toRemove: boolean, index: number) {
+    if (toRemove) {
+      this.fileNames.splice(index, 1);
+    } else {
+      // to be added - pobieranie pliku
     }
   }
 }

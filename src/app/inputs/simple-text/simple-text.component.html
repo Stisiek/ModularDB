@@ -1,12 +1,14 @@
-<div *ngIf="!isBeingCreated">
-    <label class="title">{{ titleValue }}</label>
-    <br/>
-    <input id="simpleTextInput" type="text" [(ngModel)]="value"/>
-</div>
-<div *ngIf="isBeingCreated">
-    <input type="text" placeholder="Nazwa nagłówka" [(ngModel)]="titleValue"/>
-    <br/>
-    <input type="text" placeholder="Wartość" disabled="true"/>
-    <br/>
-    <input type="checkbox" value="isNumberValue"/> <label>Wartość liczbowa</label>
+<div class="simpleTextComponent">
+    <div *ngIf="!isBeingCreated">
+        <label class="title">{{ titleValue }}</label>
+        <br/>
+        <input id="simpleTextInput" type="text" [(ngModel)]="value"/>
+    </div>
+    <div *ngIf="isBeingCreated">
+        <input type="text" placeholder="Nazwa nagłówka" [(ngModel)]="titleValue" style="margin-bottom: 10px;"/>
+        <br/>
+        <input type="text" [placeholder]="isNumberValue ? '123' : 'Tekst'" disabled="true" style="margin-bottom: 10px;"/>
+        <br/>
+        <input type="checkbox" [(ngModel)]="isNumberValue" class="chkBox" id="czekuboksu"/> <label for="czekuboksu">Wartość liczbowa</label>
+    </div>
 </div>

@@ -12,11 +12,12 @@ import { NgForOf, NgIf } from '@angular/common';
 })
 export class ImagesBoxComponent {
   isBeingCreated: boolean = false;
-  titleValue: string = 'Opis zdjęcia';
+  titleValue: string = 'Nagłówek zdjęcia';
   images: any = [];
   selectedFiles: File[] = [];
   selectedImage: number = 1;
   numberOfImages: number = 0;
+  currentPhoto: any = null;
 
   addImage(value: any) {
     this.images = [];
@@ -48,8 +49,23 @@ export class ImagesBoxComponent {
       const reader = new FileReader();
       reader.onload = (e) => {
         this.images.push(e.target?.result as string);
+        this.currentPhoto = this.images[0];
       };
       reader.readAsDataURL(file);
+    }
+  }
+
+  previousImage() {
+    if (this.selectedImage > 1) {
+      this.selectedImage--;
+      this.currentPhoto = this.images[this.selectedImage - 1];
+    }
+  }
+
+  nextImage() {
+    if (this.selectedImage < this.images.length) {
+      this.selectedImage++;
+      this.currentPhoto = this.images[this.selectedImage - 1];
     }
   }
 }

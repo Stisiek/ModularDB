@@ -1,1 +1,33 @@
-<p>super-user-panel works!</p>
+<div class="add-employee-panel">
+    <h2>Dodaj pracownika</h2>
+    <form (ngSubmit)="addEmployee()" #employeeForm="ngForm">
+        <div>
+            <label for="name">Imię:</label> <br/>
+            <input type="text" id="name" name="name" ngModel required>
+        </div>
+        <div>
+            <label for="surname">Nazwisko:</label> <br/>
+            <input type="text" id="surname" name="surname" ngModel required>
+        </div>
+        <div>
+            <label for="Login">Login pracownika:</label> <br/>
+            <input type="text" id="Login" name="Login" ngModel required>
+        </div>
+        <div>
+            <label for="password">Hasło pracownika:</label> <br/>
+            <input type="password" id="password" name="password" ngModel required>
+        </div>
+        <div>
+            <label for="password">Powtórz hasło pracownika:</label> <br/>
+            <input type="password" id="password" name="password" ngModel required>
+        </div>
+        <div>
+            <label for="role">Uprawnienia:</label> <br/>
+            <select id="role" name="role" ngModel required>
+                <option value="2">Przeglądanie</option>
+                <option value="1">Dodawanie</option>
+            </select>
+        </div>
+        <button type="submit" [disabled]="!employeeForm.form.valid">Dodaj</button>
+    </form>
+</div>

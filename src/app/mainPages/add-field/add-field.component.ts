@@ -55,7 +55,7 @@ export class AddFieldComponent {
         break;
     }
 
-    newItem.instance.isBeingCreated = true;
+    //newItem.instance.isBeingCreated = true;
 
     this.boxMakerRef?.destroy();
     this.AddPlusBtn();

@@ -12,6 +12,6 @@ export class TextAreaComponent {
   @Input() isBeingCreated = false;
   isNumberValue = false;
 
-  @Input() titleValue: string = 'Title';
+  @Input() titleValue: string = 'Nagłówek';
   value: string = '';
 }

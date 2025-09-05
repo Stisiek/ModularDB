@@ -1,32 +1,36 @@
-<div *ngIf="!isBeingCreated">
-    <label>{{ titleValue }}</label>
-    <label for="fileInput" class="file-box-label">
-        <div class="file-box">
-            <span>Click to upload a file</span>
+<div class="fileBoxContainer">
+    <div *ngIf="!isBeingCreated">
+        <label class="title">{{ titleValue }}</label>
+        <div *ngFor="let item of fileNames; let i = index" class="fileNames" (click)="fileClicked(true, i)">
+            <label class="kross">{{item}}</label><label class="eks">X</label>
         </div>
-    </label>
-    <input
+        <label for="fileInput" class="file-box-label">
+            <div class="file-box">
+                <span>Dodaj plik</span>
+            </div>
+        </label>
+        <input
         type="file"
         id="fileInput"
         (change)="onFileSelected($event)"
         hidden
         multiple
-    />
-    <p *ngFor="let item of fileNames">{{item}}</p>
-</div>
-<div *ngIf="isBeingCreated">
-    <input type="text" [value]="titleValue"/>
-    <label for="fileInput" class="file-box-label">
-        <div class="file-box">
-            <span>Click to upload a file</span>
-        </div>
-    </label>
-    <input
+        />
+    </div>
+    <div *ngIf="isBeingCreated">
+        <input type="text" [value]="titleValue"/>
+        <label for="fileInput" class="file-box-label">
+            <div class="file-box">
+                <span>Dodaj plik</span>
+            </div>
+        </label>
+        <input
         type="file"
         id="fileInput"
         (change)="onFileSelected($event)"
         hidden
         disabled
         class="disabled-input"
-    />
+        />
+    </div>
 </div>

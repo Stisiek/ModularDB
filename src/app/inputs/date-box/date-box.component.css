@@ -1,0 +1,36 @@
+.dateBoxComponent {
+    display: block;
+    background: #336;
+    border-radius: 10px;
+    padding: 10px;
+    margin: 10px 0;
+}
+
+input {
+    border-radius: 10px;
+    border: none;
+    margin-bottom: 10px;
+    height: 28px;
+    padding: 4px;
+    width: 100%;
+}
+
+.chkBox {
+    width: 14px;
+    height: 14px;
+    margin-top: 5px;
+    margin-right: 5px;
+    vertical-align: middle;
+}
+
+.title {
+    font-weight: bold;
+    margin-bottom: 5px;
+    font-size: larger;
+}
+
+.labelka {
+    font-size: large;
+    margin-bottom: 5px;
+    margin-top: 5px;
+}

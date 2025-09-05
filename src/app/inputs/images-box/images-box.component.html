@@ -1,19 +1,30 @@
-<div *ngIf="!isBeingCreated">
-    <label>{{titleValue}}</label>
-    <br/>
-    <input
-        type="file"
-        id="fileInput"
-        (change)="onImageSelect($event)"
-        accept="image/*"
-        multiple
-    />
-    <div>
-        <app-image-slave *ngFor="let item of images" [imageSrc]="item" [imgName]="item.name"></app-image-slave>
+<div class="imagesBox">
+    <div *ngIf="!isBeingCreated">
+        <label class="title">{{titleValue}}</label>
+        <br />
+        <div class="imageCounter" *ngIf="images.length > 0">
+            <label>Zdjęcie {{selectedImage}} z {{images.length}}</label>
+        </div>
+        <div class="image-navigation">
+            <app-image-slave [imageSrc]="currentPhoto"></app-image-slave>
+            <button (click)="previousImage()" [disabled]="selectedImage <= 1" *ngIf="images.length > 1">&#8592;</button>
+            <button (click)="nextImage()" [disabled]="selectedImage >= images.length" *ngIf="images.length > 1">&#8594;</button>
+        </div>
+        <label for="imageInputEnabled" class="imageBoxLabel">
+            <div class="imageBox">
+                <span>Dodaj zdjęcie</span>
+            </div>
+        </label>
+        <input type="file" id="imageInputEnabled" (change)="onImageSelect($event)" accept="image/*" multiple hidden />
     </div>
-</div>
-<div *ngIf="isBeingCreated">
-    <input type="text" [(ngModel)]="titleValue"/>
-    <br/>
-    <input type="file" id="imageInput" accept="image/*" disabled>
+    <div *ngIf="isBeingCreated">
+        <input type="text" [(ngModel)]="titleValue" />
+        <br />
+        <label for="imageInput" class="imageBoxLabel">
+            <div class="imageBox">
+                <span>Dodaj zdjęcie</span>
+            </div>
+        </label>
+        <input type="file" id="imageInput" accept="image/*" class="imageInput" hidden disabled>
+    </div>
 </div>

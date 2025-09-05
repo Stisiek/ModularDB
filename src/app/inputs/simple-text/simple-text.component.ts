@@ -13,6 +13,6 @@ export class SimpleTextComponent {
   @Input() isBeingCreated = false;
   isNumberValue = false;
 
-  @Input() titleValue: string = 'Title';
+  @Input() titleValue: string = 'Nagłówek';
   value: string = '';
 }
