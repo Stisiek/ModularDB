@@ -1,0 +1,17 @@
+app-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 50px;
+    width: 100%;
+}
+
+.siteContent {
+    margin-top: 50px;
+    padding: 20px;
+}
+
+app-main-view {
+    display: block;
+    margin-top: 50px;
+}
