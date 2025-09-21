@@ -3,6 +3,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { STATE } from '../../enums/STATE';
 import { StateMgrService } from '../../services/state-mgr.service';
+import { FieldBox } from '../../api/steelService';
 
 @Component({
   selector: 'app-file-box',
@@ -11,20 +12,32 @@ import { StateMgrService } from '../../services/state-mgr.service';
   styleUrl: './file-box.component.css'
 })
 export class FileBoxComponent {
+  STATE = STATE;
   @Input() isBeingCreated = false;
   fileNames: string[] = [];
 
-  titleValue = 'Nagłówek pliku';
-
   @Output() deleteClicked = new EventEmitter<void>();
+
+  @Input() fieldInfo: FieldBox = new FieldBox();
   
   constructor(public stateMgr: StateMgrService) { }
+
+  ngOnInit() {
+    this.fieldInfo.title = this.fieldInfo.title ?? 'Opis pliku';
+    this.fieldInfo.type = 'FB';
+
+    this.fileNames = this.fieldInfo.value?.split('|') ?? [];
+    this.fieldInfo.fileCount = this.fileNames.length;
+  }
 
   onDelete() {
     this.deleteClicked.emit();
   }
 
   onCreate() {
+    this.fieldInfo.isTemplate = true;
+    this.fieldInfo.value = this.fileNames.join('|');
+    this.fieldInfo.fileCount = this.fileNames.length;
     this.isBeingCreated = false;
   }
 

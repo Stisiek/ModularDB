@@ -1,41 +1,41 @@
 <div class="dateBoxComponent">
     <div *ngIf="!isBeingCreated">
-        <label class="title">{{ titleValue }}</label> 
+        <label class="title">{{ fieldInfo.title }}</label> 
         <br/>
         <div>
             <label *ngIf="isFromTo" class="labelka">Od </label>
             <label *ngIf="!isFromTo" class="labelka">Data: </label>
-            <input type="date" [value]="dateFromValue"/>
+            <input type="date" [value]="fieldInfo.dateFrom" [disabled]="this.stateMgr.getState() === STATE.FIELD_VIEW || this.stateMgr.getState() === STATE.FIELD_EDIT"/>
             <br/>
         </div>
         <div *ngIf="isFromTo">
             <label class="labelka">Do </label>
-            <input type="date" [value]="dateToValue"/>
+            <input type="date" [value]="fieldInfo.dateTo" [disabled]="this.stateMgr.getState() === STATE.FIELD_VIEW || this.stateMgr.getState() === STATE.FIELD_EDIT"/>
             <br/>
         </div>
     </div>
     <div *ngIf="isBeingCreated">
-        <input type="text" [(ngModel)]="titleValue"/> 
+        <input type="text" [(ngModel)]="fieldInfo.title"/> 
         <br/>
         <div>
             <label *ngIf="isFromTo">Od </label>
             <label *ngIf="!isFromTo">Data: </label>
-            <input type="date" [(ngModel)]="dateFromValue" disabled/>
+            <input type="date" [(ngModel)]="fieldInfo.dateFrom" disabled/>
             <br/>
         </div>
         <div *ngIf="isFromTo">
             <label>Do </label>
-            <input type="date" [(ngModel)]="dateToValue" disabled/>
+            <input type="date" [(ngModel)]="fieldInfo.dateTo" disabled/>
             <br/>
         </div>
-        <div>
+        <div (click)="isFromTo = !isFromTo">
             <input id="isFromTo" type="checkbox" [(ngModel)]="isFromTo" class="chkBox"/>
-            <label for="isFromTo">Od - Do</label>
+            <label>Od - Do</label>
         </div>
     </div>
     <div *ngIf="isBeingCreated">
         <button (click)="onDelete()" class="baton">Usuń</button>
-        <button *ngIf="isBeingCreated" (click)="onCreate()" class="baton">Utwórz</button>
+        <button *ngIf="isBeingCreated" (click)="onCreate()" class="baton">Zapisz</button>
     </div>
     <div *ngIf="shouldShowEdit()">
         <button (click)="onEdit()" class="editBaton">Edytuj</button>

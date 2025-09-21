@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { EventEmitter, Injectable, Output } from '@angular/core';
 import { STATE } from '../enums/STATE';
 
 @Injectable({
@@ -8,10 +8,13 @@ export class StateMgrService {
   private currentState: STATE = STATE.FIELD_EDIT;
   private menuOpen: boolean = false;
 
+  @Output() stateChanged = new EventEmitter<STATE>();
+
   constructor() { }
 
   setState(state: STATE) {
     this.currentState = state;
+    this.stateChanged.emit(this.currentState);
   }
 
   getState(): STATE {

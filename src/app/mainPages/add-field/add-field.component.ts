@@ -32,7 +32,23 @@ export class AddFieldComponent {
   constructor(private stateMgr: StateMgrService) { }
 
   ngAfterViewInit() {
-    this.AddPlusBtn();
+    this.stateMgr.stateChanged.subscribe(() => {
+      switch (this.stateMgr.getState()) {
+        case STATE.FIELD_EDIT:
+          if (this.boxMakerRef !== null) {
+            return;
+          }
+          this.AddPlusBtn();
+          break;
+        case STATE.FIELD_VIEW:
+          if (this.boxMakerRef === null) {
+            return;
+          }
+          this.boxMakerRef?.destroy();
+          this.boxMakerRef = null;
+          break;
+      }
+    });
   }
   
   addComponent(val: BOXES) {
@@ -81,8 +97,6 @@ export class AddFieldComponent {
       });
     }
   }
-
-
 
   insertIntoProperColumn(skipAdding: boolean) {
     let result = undefined;

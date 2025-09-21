@@ -1,37 +1,16 @@
 <div class="fileBoxContainer">
     <div *ngIf="!isBeingCreated">
-        <label class="title">{{ titleValue }}</label>
+        <label class="title">{{ fieldInfo.title }}</label>
         <div *ngFor="let item of fileNames; let i = index" class="fileNames" (click)="fileClicked(true, i)">
             <label class="kross">{{item}}</label><label class="eks">X</label>
         </div>
-        <label for="fileInput" class="file-box-label">
-            <div class="file-box">
-                <span>Dodaj plik</span>
-            </div>
-        </label>
-        <input
-        type="file"
-        id="fileInput"
-        (change)="onFileSelected($event)"
-        hidden
-        multiple
-        />
+        <input type="file" #fileInput style="display: none;" (change)="onFileSelected($event)">
+        <button type="button" (click)="fileInput.click()" class="custom-file-btn" [disabled]="stateMgr.getState() === STATE.FIELD_VIEW || stateMgr.getState() === STATE.FIELD_EDIT">Wybierz plik</button>
     </div>
     <div *ngIf="isBeingCreated">
-        <input type="text" [(ngModel)]="titleValue"/>
-        <label for="fileInput" class="file-box-label">
-            <div class="file-box">
-                <span>Dodaj plik</span>
-            </div>
-        </label>
-        <input
-        type="file"
-        id="fileInput"
-        (change)="onFileSelected($event)"
-        hidden
-        disabled
-        class="disabled-input"
-        />
+        <input type="text" [(ngModel)]="fieldInfo.title"/>
+        <input type="file" #fileInput style="display: none;" (change)="onFileSelected($event)">
+        <button type="button" (click)="fileInput.click()" class="custom-file-btn" disabled>Wybierz plik</button>
     </div>
     <div *ngIf="isBeingCreated">
         <button (click)="onDelete()" class="baton">Usuń</button>

@@ -1,9 +1,10 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ImageSlaveComponent } from "../../slaves/image-slave/image-slave.component";
 import { NgForOf, NgIf } from '@angular/common';
 import { StateMgrService } from '../../services/state-mgr.service';
 import { STATE } from '../../enums/STATE';
+import { FieldBox } from '../../api/steelService';
 
 
 @Component({
@@ -13,8 +14,8 @@ import { STATE } from '../../enums/STATE';
   styleUrl: './images-box.component.css'
 })
 export class ImagesBoxComponent {
-  isBeingCreated: boolean = false;
-  titleValue: string = 'Nagłówek zdjęcia';
+  STATE = STATE;
+  @Input() isBeingCreated: boolean = false;
   images: any = [];
   selectedFiles: File[] = [];
   selectedImage: number = 1;
@@ -22,14 +23,23 @@ export class ImagesBoxComponent {
   currentPhoto: any = null;
 
   @Output() deleteClicked = new EventEmitter<void>();
+
+  @Input() fieldInfo: FieldBox = new FieldBox();
   
   constructor(public stateMgr: StateMgrService) { }
+
+  ngOnInit() {
+    this.fieldInfo.title = this.fieldInfo.title ?? 'Opis zdjęć';
+    this.fieldInfo.type = 'IB';
+  }
 
   onDelete() {
     this.deleteClicked.emit();
   }
 
   onCreate() {
+    this.fieldInfo.isTemplate = true;
+    this.fieldInfo.imageCount = this.images.length;
     this.isBeingCreated = false;
   }
 

@@ -34,4 +34,14 @@ export class FooterComponent {
     this.stateMgr.getState() === STATE.RECORD_VIEW || 
     this.stateMgr.getState() === STATE.SUPER_USER_PANEL_VIEW;
   }
+
+  editBtnClicked() {
+    this.stateMgr.setState(STATE.FIELD_EDIT);
+  }
+
+  cancelBtnClicked() {
+    if (this.stateMgr.getState() === STATE.FIELD_EDIT) {
+      this.stateMgr.setState(STATE.FIELD_VIEW);
+    }
+  }
 }

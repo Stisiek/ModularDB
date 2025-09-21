@@ -5,10 +5,10 @@
     <div class="footerFieldBoxEdit" *ngIf="isEditing()">
         <button class="saveBtn">Zapisz</button>
         <button class="clearBtn">Resetuj zmiany</button>
-        <button class="cancelBtn">Anuluj</button>
+        <button class="cancelBtn" (click)="cancelBtnClicked()">Anuluj</button>
     </div>
     <div *ngIf="showEditButton()">
-        <button class="editBtn">Edytuj</button>
+        <button class="editBtn" (click)="editBtnClicked()">Edytuj</button>
     </div>
     <div>
         <input type="text" class="templateNameInput" placeholder="Nazwa szablonu" *ngIf="isTemplateEdit()"/>

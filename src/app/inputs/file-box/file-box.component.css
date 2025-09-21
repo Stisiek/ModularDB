@@ -74,7 +74,7 @@ button:hover {
     border-radius: 10px;
 }
 
-.editBaton {
+.editBaton, .custom-file-btn {
     width: 100%;
     margin: 0;
     margin-top: 10px;

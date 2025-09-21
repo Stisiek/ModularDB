@@ -1,6 +1,6 @@
 <div class="imagesBox">
     <div *ngIf="!isBeingCreated">
-        <label class="title">{{titleValue}}</label>
+        <label class="title">{{ fieldInfo.title }}</label>
         <br />
         <div class="imageCounter" *ngIf="images.length > 0">
             <label>Zdjęcie {{selectedImage}} z {{images.length}}</label>
@@ -10,22 +10,14 @@
             <button (click)="previousImage()" [disabled]="selectedImage <= 1" *ngIf="images.length > 1">&#8592;</button>
             <button (click)="nextImage()" [disabled]="selectedImage >= images.length" *ngIf="images.length > 1">&#8594;</button>
         </div>
-        <label for="imageInputEnabled" class="imageBoxLabel">
-            <div class="imageBox">
-                <span>Dodaj zdjęcie</span>
-            </div>
-        </label>
-        <input type="file" id="imageInputEnabled" (change)="onImageSelect($event)" accept="image/*" multiple hidden />
+        <input type="file" #fileInput style="display: none;" (change)="onImageSelect($event)">
+        <button type="button" (click)="fileInput.click()" class="custom-file-btn" [disabled]="stateMgr.getState() === STATE.FIELD_VIEW || stateMgr.getState() === STATE.FIELD_EDIT">Wybierz plik</button>
     </div>
     <div *ngIf="isBeingCreated">
-        <input type="text" [(ngModel)]="titleValue" />
+        <input type="text" [(ngModel)]="fieldInfo.title" />
         <br />
-        <label for="imageInput" class="imageBoxLabel">
-            <div class="imageBox">
-                <span>Dodaj zdjęcie</span>
-            </div>
-        </label>
-        <input type="file" id="imageInput" accept="image/*" class="imageInput" hidden disabled>
+        <input type="file" #fileInput style="display: none;" (change)="onImageSelect($event)">
+        <button type="button" (click)="fileInput.click()" class="custom-file-btn" disabled>Wybierz plik</button>
     </div>
     <div *ngIf="isBeingCreated">
         <button (click)="onDelete()" class="baton">Usuń</button>

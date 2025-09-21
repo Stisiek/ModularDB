@@ -1,15 +1,21 @@
 <div class="simpleTextComponent">
     <div *ngIf="!isBeingCreated">
-        <label class="title">{{ titleValue }}</label>
+        <label class="title">{{ fieldInfo.title }}</label>
         <br/>
-        <input id="simpleTextInput" type="text" [(ngModel)]="value"/>
+        <input 
+            id="simpleTextInput" 
+            [placeholder]="fieldInfo.isNumber ? '123' : 'Tekst'" 
+            [(ngModel)]="fieldInfo.value" 
+            [disabled]="stateMgr.getState() === STATE.FIELD_VIEW || stateMgr.getState() === STATE.FIELD_EDIT"
+            [type]="fieldInfo.isNumber ? 'number' : 'text'"
+        />
     </div>
     <div *ngIf="isBeingCreated">
-        <input type="text" placeholder="Nazwa nagłówka" [(ngModel)]="titleValue" style="margin-bottom: 10px;"/>
+        <input type="text" placeholder="Nazwa nagłówka" [(ngModel)]="fieldInfo.title" style="margin-bottom: 10px;"/>
         <br/>
-        <input type="text" [placeholder]="isNumberValue ? '123' : 'Tekst'" disabled="true" style="margin-bottom: 10px;"/>
+        <input type="text" [placeholder]="fieldInfo.isNumber ? '123' : 'Tekst'" disabled style="margin-bottom: 10px;"/>
         <br/>
-        <input type="checkbox" [(ngModel)]="isNumberValue" class="chkBox" id="czekuboksu"/> <label for="czekuboksu">Wartość liczbowa</label>
+        <input type="checkbox" [(ngModel)]="fieldInfo.isNumber" class="chkBox" id="czekuboksu"/> <label for="czekuboksu">Wartość liczbowa</label>
     </div>
     <div *ngIf="isBeingCreated">
         <button (click)="onDelete()" class="baton">Usuń</button>

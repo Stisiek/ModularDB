@@ -53,3 +53,7 @@ button:hover {
     height: 28px;
     border-radius: 10px;
 }
+
+input::placeholder {
+    color: #aaa;
+}

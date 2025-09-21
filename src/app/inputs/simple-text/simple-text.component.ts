@@ -3,6 +3,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { StateMgrService } from '../../services/state-mgr.service';
 import { STATE } from '../../enums/STATE';
+import { FieldBox } from '../../api/steelService';
 
 
 @Component({
@@ -12,21 +13,28 @@ import { STATE } from '../../enums/STATE';
   styleUrl: './simple-text.component.css'
 })
 export class SimpleTextComponent {
-  @Input() isBeingCreated = false;
-  isNumberValue = false;
+  STATE = STATE;
 
-  @Input() titleValue: string = 'Nagłówek';
-  value: string = '';
+  @Input() isBeingCreated = false;
+  @Input() fieldInfo: FieldBox = new FieldBox();
 
   @Output() deleteClicked = new EventEmitter<void>();
 
   constructor(public stateMgr: StateMgrService) { }
+
+  ngOnInit() {
+    this.fieldInfo.isNumber = this.fieldInfo.isNumber ?? false;
+    this.fieldInfo.title = this.fieldInfo.title ?? 'Opis pola';
+    this.fieldInfo.value = this.fieldInfo.value ?? '';
+    this.fieldInfo.type = 'ST';
+  }
 
   onDelete() {
     this.deleteClicked.emit();
   }
 
   onCreate() {
+    this.fieldInfo.isTemplate = true;
     this.isBeingCreated = false;
   }
 

@@ -1,4 +1,3 @@
-/* Stylowanie nawigacji strzałkami na zdjęciu */
 .image-navigation {
     position: relative;
     display: flex;
@@ -48,6 +47,7 @@ app-image-slave img {
 }
 
 input {
+    border: 1px solid black;
     border-radius: 10px;
     border: none;
     margin-bottom: 10px;
@@ -105,7 +105,7 @@ button:hover {
     border-radius: 10px;
 }
 
-.editBaton {
+.editBaton, .custom-file-btn {
     width: 100%;
     margin: 0;
     margin-top: 10px;
