@@ -1,0 +1,29 @@
+.menuPopUp {
+    position: fixed;
+    top: 50px;
+    left: 0px;
+    z-index: 10;
+    width: 200px;
+    background: #448;
+    border: 1px solid #000;
+    border-top: none;
+    border-left: none;
+    border-bottom-right-radius: 10px;
+}
+
+button {
+    width: 90%;
+    border: 1px solid #000;
+    border-radius: 10px;
+    background: #559;
+    color: white;
+    height: 30px;
+    margin: 5%;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+button:hover {
+    background: #66a;
+    cursor: pointer;
+}

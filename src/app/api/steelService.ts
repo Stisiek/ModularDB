@@ -634,7 +634,7 @@ export class Client {
     /**
      * @return OK
      */
-    logIn(login: string, password: string): Promise<string> {
+    logIn(login: string, password: string): Promise<UserInfoForUserDto> {
         let url_ = this.baseUrl + "/User/LogIn/{login}/{password}";
         if (login === undefined || login === null)
             throw new Error("The parameter 'login' must be defined.");
@@ -656,15 +656,14 @@ export class Client {
         });
     }
 
-    protected processLogIn(response: Response): Promise<string> {
+    protected processLogIn(response: Response): Promise<UserInfoForUserDto> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
             return response.text().then((_responseText) => {
             let result200: any = null;
-            let resultData200 = _responseText === "" ? null : _responseText;
-                result200 = resultData200 !== undefined ? resultData200 : <any>null;
-    
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = UserInfoForUserDto.fromJS(resultData200);
             return result200;
             });
         } else if (status !== 200 && status !== 204) {
@@ -672,7 +671,47 @@ export class Client {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<string>(null as any);
+        return Promise.resolve<UserInfoForUserDto>(null as any);
+    }
+
+    /**
+     * @return OK
+     */
+    logInWithToken(token: string): Promise<UserInfoForUserDto> {
+        let url_ = this.baseUrl + "/User/LogIn/{token}";
+        if (token === undefined || token === null)
+            throw new Error("The parameter 'token' must be defined.");
+        url_ = url_.replace("{token}", encodeURIComponent("" + token));
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "text/plain"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processLogInWithToken(_response);
+        });
+    }
+
+    protected processLogInWithToken(response: Response): Promise<UserInfoForUserDto> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = UserInfoForUserDto.fromJS(resultData200);
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<UserInfoForUserDto>(null as any);
     }
 
     /**
@@ -1452,6 +1491,58 @@ export interface IUserInfoForSuperuserDto {
     permissionLevel?: number;
     isActive?: boolean;
     hireDate?: Date;
+}
+
+export class UserInfoForUserDto implements IUserInfoForUserDto {
+    token?: string | undefined;
+    id?: number;
+    name?: string | undefined;
+    surname?: string | undefined;
+    permissionLevel?: number;
+
+    constructor(data?: IUserInfoForUserDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.token = _data["token"];
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.surname = _data["surname"];
+            this.permissionLevel = _data["permissionLevel"];
+        }
+    }
+
+    static fromJS(data: any): UserInfoForUserDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new UserInfoForUserDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["token"] = this.token;
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["surname"] = this.surname;
+        data["permissionLevel"] = this.permissionLevel;
+        return data;
+    }
+}
+
+export interface IUserInfoForUserDto {
+    token?: string | undefined;
+    id?: number;
+    name?: string | undefined;
+    surname?: string | undefined;
+    permissionLevel?: number;
 }
 
 export class ApiException extends Error {

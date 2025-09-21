@@ -1,5 +1,5 @@
 <header class="header-row">
-  <button class="header-btn">Menu</button>
-  <span class="header-title">{{ appName }}</span>
+  <button class="header-btn" (click)="menuClick()">Menu</button>
+  <span class="header-title" (click)="navigateToHome()">{{ appName }}</span>
   <app-quick-options class="header-options"></app-quick-options>
 </header>

@@ -18,7 +18,7 @@
         />
     </div>
     <div *ngIf="isBeingCreated">
-        <input type="text" [value]="titleValue"/>
+        <input type="text" [(ngModel)]="titleValue"/>
         <label for="fileInput" class="file-box-label">
             <div class="file-box">
                 <span>Dodaj plik</span>
@@ -32,5 +32,12 @@
         disabled
         class="disabled-input"
         />
+    </div>
+    <div *ngIf="isBeingCreated">
+        <button (click)="onDelete()" class="baton">Usuń</button>
+        <button *ngIf="isBeingCreated" (click)="onCreate()" class="baton">Utwórz</button>
+    </div>
+    <div *ngIf="shouldShowEdit()">
+        <button (click)="onEdit()" class="editBaton">Edytuj</button>
     </div>
 </div>

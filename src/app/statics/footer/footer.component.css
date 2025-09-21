@@ -1,0 +1,67 @@
+:host {
+    display: block;
+    height: 50px;
+    background-color: rgb(61, 61, 172);
+    border-top: 1px solid #000;
+    text-align: center;
+    font-size: 14px;
+    color: #666;
+    box-shadow: 0 12px 18px rgba(0, 0, 0, 0.15);
+}
+
+.footer {
+    display: flex;
+    align-items: flex-start;
+}
+
+.footer button {
+    border-radius: 10px;
+    border: 1px solid #000;
+    margin: 10px;
+    align-self: center;
+    background: rgb(91,91,200);
+    color: white;
+    height: 30px;
+    width: 200px;
+}
+
+input, select, option {
+    border-radius: 10px;
+    height: 30px;
+    width: 300px;
+    margin: 10px;
+    background: #666;
+    color: white;
+    border: 2px solid #000;
+    padding: 2px;
+}
+
+.saveBtn {
+    font-weight: bold;
+    background: green !important;
+}
+
+input::placeholder, option {
+  color: #DDD; /* Twój wybrany kolor */
+  opacity: 1;  /* Opcjonalnie: pełna widoczność */
+}
+
+.clearBtn {
+    background: orange !important;
+    color: black !important;
+}
+
+.cancelBtn {
+    background: red !important;
+}
+
+.footerLabel {
+    margin-left: 10px;
+    font-size: 16px;
+    font-weight: bold;
+
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    z-index: 11 !important;
+}

@@ -2,7 +2,6 @@ import { NgForOf, NgIf } from '@angular/common';
 import { Component, EventEmitter, Output } from '@angular/core';
 import { BOXES } from '../../enums/BOXES';
 import { FormsModule } from '@angular/forms';
-import { Client } from '../../api/steelService';
 
 @Component({
   selector: 'app-box-maker',
@@ -17,12 +16,7 @@ export class BoxMakerComponent {
 
   @Output() boxAdded = new EventEmitter<BOXES>();
 
-  constructor(public steelService: Client) { }
-
   addBox() {
-    this.steelService.logIn("", "").then(result => {
-      console.log(result);
-    });
     this.addingEnabled = true;
   }
   

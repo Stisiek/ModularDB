@@ -7,6 +7,15 @@ app-header {
     z-index: 10;
 }
 
+app-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    height: 50px;
+    width: 100%;
+    z-index: 10;
+}
+
 .siteContent {
     margin-top: 50px;
     padding: 20px;
@@ -15,4 +24,8 @@ app-header {
 app-main-view {
     display: block;
     margin-top: 50px;
+}
+
+.footerSpace {
+    height: 50px;
 }

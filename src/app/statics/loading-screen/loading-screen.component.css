@@ -1,0 +1,9 @@
+p {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 4px;
+    background-color: #66F;
+    transition: width 0.3s ease, background-color 0.3s ease;
+    z-index: 1000;
+}

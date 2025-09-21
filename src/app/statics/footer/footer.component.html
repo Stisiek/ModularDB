@@ -1,0 +1,20 @@
+<div class="footer">
+    <div>
+        <label class="footerLabel" *ngIf="!isEditing()">SteelApp © 2025</label>
+    </div>
+    <div class="footerFieldBoxEdit" *ngIf="isEditing()">
+        <button class="saveBtn">Zapisz</button>
+        <button class="clearBtn">Resetuj zmiany</button>
+        <button class="cancelBtn">Anuluj</button>
+    </div>
+    <div *ngIf="showEditButton()">
+        <button class="editBtn">Edytuj</button>
+    </div>
+    <div>
+        <input type="text" class="templateNameInput" placeholder="Nazwa szablonu" *ngIf="isTemplateEdit()"/>
+        <select class="templateSelect" *ngIf="isTemplate()">
+            <option value="newTemplate" disabled selected>Nowy szablon</option>
+            <option *ngFor="let template of templates" [value]="template.id">{{template.name}}</option>
+        </select>
+    </div>
+</div>

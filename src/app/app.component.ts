@@ -7,17 +7,22 @@ import { FileBoxComponent } from "./inputs/file-box/file-box.component";
 import { DateBoxComponent } from "./inputs/date-box/date-box.component";
 import { HeaderComponent } from "./statics/header/header.component";
 import { MainViewComponent } from "./statics/main-view/main-view.component";
+import { FooterComponent } from "./statics/footer/footer.component";
+import { LoadingScreenComponent } from "./statics/loading-screen/loading-screen.component";
+import { LoginMgrService } from './services/login-mgr.service';
 
 @Component({
   selector: 'app-root',
-  imports: [HeaderComponent, MainViewComponent],
+  imports: [HeaderComponent, MainViewComponent, FooterComponent, LoadingScreenComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
 export class AppComponent {
   title = 'tomsteel-app';
 
+  constructor(private loginMgr: LoginMgrService) { }
+
   ngOnInit() {
-    // This code assumes you have a ViewChild reference to a container in your template.
+    this.loginMgr.logInWithToken();
   }
 }

@@ -15,22 +15,29 @@
         </div>
     </div>
     <div *ngIf="isBeingCreated">
-        <input type="text" [value]="titleValue"/> 
+        <input type="text" [(ngModel)]="titleValue"/> 
         <br/>
         <div>
             <label *ngIf="isFromTo">Od </label>
             <label *ngIf="!isFromTo">Data: </label>
-            <input type="date" [value]="dateFromValue" disabled/>
+            <input type="date" [(ngModel)]="dateFromValue" disabled/>
             <br/>
         </div>
         <div *ngIf="isFromTo">
             <label>Do </label>
-            <input type="date" [value]="dateToValue" disabled/>
+            <input type="date" [(ngModel)]="dateToValue" disabled/>
             <br/>
         </div>
         <div>
             <input id="isFromTo" type="checkbox" [(ngModel)]="isFromTo" class="chkBox"/>
             <label for="isFromTo">Od - Do</label>
         </div>
+    </div>
+    <div *ngIf="isBeingCreated">
+        <button (click)="onDelete()" class="baton">Usuń</button>
+        <button *ngIf="isBeingCreated" (click)="onCreate()" class="baton">Utwórz</button>
+    </div>
+    <div *ngIf="shouldShowEdit()">
+        <button (click)="onEdit()" class="editBaton">Edytuj</button>
     </div>
 </div>

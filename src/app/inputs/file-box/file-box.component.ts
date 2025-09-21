@@ -1,6 +1,8 @@
 import { NgForOf, NgIf } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { STATE } from '../../enums/STATE';
+import { StateMgrService } from '../../services/state-mgr.service';
 
 @Component({
   selector: 'app-file-box',
@@ -13,6 +15,26 @@ export class FileBoxComponent {
   fileNames: string[] = [];
 
   titleValue = 'Nagłówek pliku';
+
+  @Output() deleteClicked = new EventEmitter<void>();
+  
+  constructor(public stateMgr: StateMgrService) { }
+
+  onDelete() {
+    this.deleteClicked.emit();
+  }
+
+  onCreate() {
+    this.isBeingCreated = false;
+  }
+
+  onEdit() {
+    this.isBeingCreated = true;
+  }
+
+  shouldShowEdit() : boolean {
+    return this.stateMgr.getState() === STATE.FIELD_EDIT && !this.isBeingCreated;
+  }
 
   onFileSelected(value: any) {
     this.fileNames = [];

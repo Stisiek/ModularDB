@@ -1,0 +1,10 @@
+<div class="menuPopUp" *ngIf="isMenuOpen()">
+    <div class="menuPopUpContent">
+        <button class="menuPopUpItem" (click)="navigateToHome(); BtnClicked();">Strona główna</button>
+        <button class="menuPopUpItem" (click)="search(); BtnClicked();">Wyszukaj</button>
+        <button class="menuPopUpItem" (click)="openTemplates(); BtnClicked();">Szablony</button>
+        <button class="menuPopUpItem" (click)="openDataFields(); BtnClicked();">Pola danych</button>
+        <button class="menuPopUpItem" *ngIf="isAdmin()" (click)="manageBtnClick(); BtnClicked();">Zarządzaj</button>
+        <button class="menuPopUpItem" *ngIf="isLoggedIn()" (click)="logout(); BtnClicked();">Wyloguj</button>
+    </div>
+</div>

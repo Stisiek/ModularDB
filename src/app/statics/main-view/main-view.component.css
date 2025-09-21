@@ -4,7 +4,3 @@ app-login-page {
     left: 50%;
     transform: translate(-50%, -50%);
 }
-
-app-add-field {
-    width: 100%;
-}

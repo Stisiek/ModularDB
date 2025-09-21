@@ -6,12 +6,13 @@
   height: 50px;
   background: rgb(61, 61, 172);
   box-shadow: 0 12px 18px rgba(0, 0, 0, 0.15);
+  border-bottom: 1px solid #000;
 }
 
 .header-btn {
     display: block;
     border-radius: 10px;
-    border: none;
+    border: 1px solid black;
     margin: 10px;
     align-self: center;
     background: rgb(91,91,200);
@@ -27,6 +28,11 @@
   font-weight: bold;
 }
 
+.header-title:hover {
+  cursor: pointer;
+  color: yellow;
+}
+
 .header-options {
-  /* opcjonalne style dla quick options */
+  justify-content: center;
 }

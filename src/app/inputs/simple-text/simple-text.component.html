@@ -11,4 +11,11 @@
         <br/>
         <input type="checkbox" [(ngModel)]="isNumberValue" class="chkBox" id="czekuboksu"/> <label for="czekuboksu">Wartość liczbowa</label>
     </div>
+    <div *ngIf="isBeingCreated">
+        <button (click)="onDelete()" class="baton">Usuń</button>
+        <button *ngIf="isBeingCreated" (click)="onCreate()" class="baton">Utwórz</button>
+    </div>
+    <div *ngIf="shouldShowEdit()">
+        <button (click)="onEdit()" class="editBaton">Edytuj</button>
+    </div>
 </div>

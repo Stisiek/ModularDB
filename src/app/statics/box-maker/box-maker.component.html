@@ -1,7 +1,7 @@
 <div class="box-maker">
     <button (click)="addBox()" *ngIf="!addingEnabled" class="plusButton">+</button>
     <div *ngIf="addingEnabled">
-        <label for="boxSelect">Wybierz typ danych:</label>
+        <label>Wybierz typ danych:</label>
         <select [(ngModel)]="chosenBox">
             <option *ngFor="let box of boxes">{{ box }}</option>
         </select>

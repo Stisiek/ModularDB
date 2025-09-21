@@ -1,8 +1,6 @@
-<app-record-finder></app-record-finder>
-<app-add-field></app-add-field>
-
-<!--
-    <app-edit-template></app-edit-template>
-    <app-super-user-panel></app-super-user-panel>
-    <app-login-page></app-login-page>
--->
+<app-menu-pop-up></app-menu-pop-up>
+<app-login-page *ngIf="!loginMgr.isLoggedIn()"></app-login-page>
+<app-record-finder *ngIf="stateMgr.getState() == STATE.MAIN_VIEW"></app-record-finder>
+<app-add-field *ngIf="stateMgr.getState() == STATE.FIELD_VIEW || stateMgr.getState() == STATE.FIELD_EDIT"></app-add-field>
+<app-super-user-panel *ngIf="stateMgr.getState() == STATE.SUPER_USER_PANEL_VIEW || stateMgr.getState() == STATE.SUPER_USER_PANEL_EDIT"></app-super-user-panel>
+<app-edit-template *ngIf="stateMgr.getState() == STATE.TEMPLATE_VIEW || stateMgr.getState() == STATE.TEMPLATE_EDIT"></app-edit-template>

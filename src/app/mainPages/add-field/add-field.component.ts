@@ -7,6 +7,9 @@ import { SimpleTextComponent } from '../../inputs/simple-text/simple-text.compon
 import { DateBoxComponent } from '../../inputs/date-box/date-box.component';
 import { BoxMakerComponent } from '../../statics/box-maker/box-maker.component';
 import { timeout } from 'rxjs';
+import { StateMgrService } from '../../services/state-mgr.service';
+import { STATE } from '../../enums/STATE';
+import { FieldBox } from '../../api/steelService';
 
 @Component({
   selector: 'app-add-field',
@@ -17,6 +20,8 @@ import { timeout } from 'rxjs';
 export class AddFieldComponent {
   addingPosition: number = 1;
 
+  newBox: FieldBox = new FieldBox();
+
   @ViewChild('searchBar', { read: ViewContainerRef }) searchBar!: ViewContainerRef;
   @ViewChild('containerLeft', { read: ViewContainerRef }) containerLeft!: ViewContainerRef;
   @ViewChild('containerMiddle', { read: ViewContainerRef }) containerMiddle!: ViewContainerRef;
@@ -24,12 +29,10 @@ export class AddFieldComponent {
 
   private boxMakerRef: ComponentRef<BoxMakerComponent> | null = null;
 
-  ngAfterViewInit() {
-    this.boxMakerRef = this.searchBar.createComponent(BoxMakerComponent);
+  constructor(private stateMgr: StateMgrService) { }
 
-    this.boxMakerRef.instance.boxAdded.subscribe((val: BOXES) => {
-      this.addComponent(val);
-    });
+  ngAfterViewInit() {
+    this.AddPlusBtn();
   }
   
   addComponent(val: BOXES) {
@@ -55,7 +58,15 @@ export class AddFieldComponent {
         break;
     }
 
-    //newItem.instance.isBeingCreated = true;
+    newItem.instance.deleteClicked.subscribe(() => {
+      newItem?.destroy();
+      this.addingPosition--;
+      this.boxMakerRef?.destroy();
+      this.AddPlusBtn();
+    });
+
+    if (this.stateMgr.getState() === STATE.FIELD_EDIT)
+      newItem.instance.isBeingCreated = true;
 
     this.boxMakerRef?.destroy();
     this.AddPlusBtn();
@@ -70,6 +81,8 @@ export class AddFieldComponent {
       });
     }
   }
+
+
 
   insertIntoProperColumn(skipAdding: boolean) {
     let result = undefined;
