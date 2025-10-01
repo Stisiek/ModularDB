@@ -13,8 +13,8 @@
         <button type="button" (click)="fileInput.click()" class="custom-file-btn" disabled>Wybierz plik</button>
     </div>
     <div *ngIf="isBeingCreated">
+        <button *ngIf="isBeingCreated" (click)="onCreate()" class="baton">Zapisz</button>
         <button (click)="onDelete()" class="baton">Usuń</button>
-        <button *ngIf="isBeingCreated" (click)="onCreate()" class="baton">Utwórz</button>
     </div>
     <div *ngIf="shouldShowEdit()">
         <button (click)="onEdit()" class="editBaton">Edytuj</button>

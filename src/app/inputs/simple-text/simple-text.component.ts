@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { StateMgrService } from '../../services/state-mgr.service';
 import { STATE } from '../../enums/STATE';
 import { FieldBox } from '../../api/steelService';
+import { InputBoxBase } from '../input-box-base';
 
 
 @Component({
@@ -12,15 +13,11 @@ import { FieldBox } from '../../api/steelService';
   templateUrl: './simple-text.component.html',
   styleUrl: './simple-text.component.css'
 })
-export class SimpleTextComponent {
-  STATE = STATE;
+export class SimpleTextComponent extends InputBoxBase {
 
-  @Input() isBeingCreated = false;
-  @Input() fieldInfo: FieldBox = new FieldBox();
-
-  @Output() deleteClicked = new EventEmitter<void>();
-
-  constructor(public stateMgr: StateMgrService) { }
+  constructor(public stateMgrL: StateMgrService) { 
+    super(stateMgrL);
+  }
 
   ngOnInit() {
     this.fieldInfo.isNumber = this.fieldInfo.isNumber ?? false;
@@ -29,20 +26,11 @@ export class SimpleTextComponent {
     this.fieldInfo.type = 'ST';
   }
 
-  onDelete() {
-    this.deleteClicked.emit();
-  }
-
   onCreate() {
+    this.fieldInfo.templateParentId = 0;
+    this.fieldInfo.memberId = 0;
     this.fieldInfo.isTemplate = true;
     this.isBeingCreated = false;
-  }
-
-  onEdit() {
-    this.isBeingCreated = true;
-  }
-
-  shouldShowEdit() : boolean {
-    return this.stateMgr.getState() === STATE.FIELD_EDIT && !this.isBeingCreated;
+    this.editFinished.emit();
   }
 }

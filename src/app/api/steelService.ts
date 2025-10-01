@@ -68,102 +68,11 @@ export class Client {
     }
 
     /**
-     * @param token (optional) 
      * @param body (optional) 
      * @return OK
      */
-    saveNewFieldBox(token: string | undefined, body: FieldBox | undefined): Promise<void> {
-        let url_ = this.baseUrl + "/FieldBox/SaveNewFieldBox?";
-        if (token === null)
-            throw new Error("The parameter 'token' cannot be null.");
-        else if (token !== undefined)
-            url_ += "token=" + encodeURIComponent("" + token) + "&";
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(body);
-
-        let options_: RequestInit = {
-            body: content_,
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            }
-        };
-
-        return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processSaveNewFieldBox(_response);
-        });
-    }
-
-    protected processSaveNewFieldBox(response: Response): Promise<void> {
-        const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 200) {
-            return response.text().then((_responseText) => {
-            return;
-            });
-        } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
-        }
-        return Promise.resolve<void>(null as any);
-    }
-
-    /**
-     * @param removeIndex (optional) 
-     * @param token (optional) 
-     * @return OK
-     */
-    removeFieldBox(removeIndex: number | undefined, token: string | undefined): Promise<void> {
-        let url_ = this.baseUrl + "/FieldBox/RemoveFieldBox?";
-        if (removeIndex === null)
-            throw new Error("The parameter 'removeIndex' cannot be null.");
-        else if (removeIndex !== undefined)
-            url_ += "removeIndex=" + encodeURIComponent("" + removeIndex) + "&";
-        if (token === null)
-            throw new Error("The parameter 'token' cannot be null.");
-        else if (token !== undefined)
-            url_ += "token=" + encodeURIComponent("" + token) + "&";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_: RequestInit = {
-            method: "DELETE",
-            headers: {
-            }
-        };
-
-        return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processRemoveFieldBox(_response);
-        });
-    }
-
-    protected processRemoveFieldBox(response: Response): Promise<void> {
-        const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 200) {
-            return response.text().then((_responseText) => {
-            return;
-            });
-        } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
-        }
-        return Promise.resolve<void>(null as any);
-    }
-
-    /**
-     * @param token (optional) 
-     * @param body (optional) 
-     * @return OK
-     */
-    updateFieldBox(token: string | undefined, body: FieldBox | undefined): Promise<void> {
-        let url_ = this.baseUrl + "/FieldBox/UpdateFieldBox?";
-        if (token === null)
-            throw new Error("The parameter 'token' cannot be null.");
-        else if (token !== undefined)
-            url_ += "token=" + encodeURIComponent("" + token) + "&";
+    performActionsOnFieldBoxes(body: InsertFieldBoxesDto[] | undefined): Promise<void> {
+        let url_ = this.baseUrl + "/FieldBox/PerformActionsOnFieldBoxes";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(body);
@@ -177,11 +86,11 @@ export class Client {
         };
 
         return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processUpdateFieldBox(_response);
+            return this.processPerformActionsOnFieldBoxes(_response);
         });
     }
 
-    protected processUpdateFieldBox(response: Response): Promise<void> {
+    protected processPerformActionsOnFieldBoxes(response: Response): Promise<void> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
@@ -941,6 +850,12 @@ export class Client {
     }
 }
 
+export enum ActionType {
+    Create = "Create",
+    Update = "Update",
+    Delete = "Delete",
+}
+
 export class FieldBox implements IFieldBox {
     id?: number;
     memberId?: number;
@@ -1051,6 +966,58 @@ export interface IFieldBox {
     dateTo?: Date;
     isSingleDate?: boolean | undefined;
     type: string;
+}
+
+export class InsertFieldBoxesDto implements IInsertFieldBoxesDto {
+    listOfFieldBoxes?: FieldBox[] | undefined;
+    actionType?: ActionType;
+    token?: string | undefined;
+
+    constructor(data?: IInsertFieldBoxesDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["listOfFieldBoxes"])) {
+                this.listOfFieldBoxes = [] as any;
+                for (let item of _data["listOfFieldBoxes"])
+                    this.listOfFieldBoxes!.push(FieldBox.fromJS(item));
+            }
+            this.actionType = _data["actionType"];
+            this.token = _data["token"];
+        }
+    }
+
+    static fromJS(data: any): InsertFieldBoxesDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new InsertFieldBoxesDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.listOfFieldBoxes)) {
+            data["listOfFieldBoxes"] = [];
+            for (let item of this.listOfFieldBoxes)
+                data["listOfFieldBoxes"].push(item ? item.toJSON() : <any>undefined);
+        }
+        data["actionType"] = this.actionType;
+        data["token"] = this.token;
+        return data;
+    }
+}
+
+export interface IInsertFieldBoxesDto {
+    listOfFieldBoxes?: FieldBox[] | undefined;
+    actionType?: ActionType;
+    token?: string | undefined;
 }
 
 export class SearchDataDto implements ISearchDataDto {

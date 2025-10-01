@@ -3,7 +3,7 @@
     <div *ngIf="addingEnabled">
         <label>Wybierz typ danych:</label>
         <select [(ngModel)]="chosenBox">
-            <option *ngFor="let box of boxes">{{ box }}</option>
+            <option *ngFor="let box of boxes" [value]="box">{{ box | boxNames }}</option>
         </select>
         <div class="menuButtons">
             <button (click)="nextClicked()" [disabled]="!chosenBox">Dalej</button>

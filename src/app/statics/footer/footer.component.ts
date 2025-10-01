@@ -42,6 +42,15 @@ export class FooterComponent {
   cancelBtnClicked() {
     if (this.stateMgr.getState() === STATE.FIELD_EDIT) {
       this.stateMgr.setState(STATE.FIELD_VIEW);
+      this.saveMgr.cancelBtnClicked();
     }
+  }
+
+  saveBtnClicked() {
+    this.saveMgr.saveBtnClicked();
+  }
+
+  clearBtnClicked() {
+    this.saveMgr.clearBtnClicked();
   }
 }

@@ -10,8 +10,8 @@
         <textarea type="text" placeholder="Wartość" disabled [(ngModel)]="fieldInfo.value"></textarea>
     </div>
     <div *ngIf="isBeingCreated">
+        <button *ngIf="isBeingCreated" (click)="onCreate()" class="baton">Zapisz</button>
         <button (click)="onDelete()" class="baton">Usuń</button>
-        <button *ngIf="isBeingCreated" (click)="onCreate()" class="baton">Utwórz</button>
     </div>
     <div *ngIf="shouldShowEdit()">
         <button (click)="onEdit()" class="editBaton">Edytuj</button>

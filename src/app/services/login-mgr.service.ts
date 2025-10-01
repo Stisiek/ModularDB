@@ -15,6 +15,10 @@ export class LoginMgrService {
     return true;
   }
 
+  getToken() {
+    return this.userInfo.token;
+  }
+
   logOut() {
     this.isLoggedInStatus = false;
     this.userInfo = new UserInfoForUserDto();

@@ -2,10 +2,11 @@ import { NgForOf, NgIf } from '@angular/common';
 import { Component, EventEmitter, Output } from '@angular/core';
 import { BOXES } from '../../enums/BOXES';
 import { FormsModule } from '@angular/forms';
+import { BoxNamesPipe } from '../../pipes/box-names.pipe';
 
 @Component({
   selector: 'app-box-maker',
-  imports: [NgIf, NgForOf, FormsModule],
+  imports: [NgIf, NgForOf, FormsModule, BoxNamesPipe],
   templateUrl: './box-maker.component.html',
   styleUrl: './box-maker.component.css'
 })

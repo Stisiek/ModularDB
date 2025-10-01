@@ -3,8 +3,8 @@
         <label class="footerLabel" *ngIf="!isEditing()">SteelApp © 2025</label>
     </div>
     <div class="footerFieldBoxEdit" *ngIf="isEditing()">
-        <button class="saveBtn">Zapisz</button>
-        <button class="clearBtn">Resetuj zmiany</button>
+        <button class="saveBtn" (click)="saveBtnClicked()">Zapisz</button>
+        <button class="clearBtn" (click)="clearBtnClicked()">Resetuj zmiany</button>
         <button class="cancelBtn" (click)="cancelBtnClicked()">Anuluj</button>
     </div>
     <div *ngIf="showEditButton()">

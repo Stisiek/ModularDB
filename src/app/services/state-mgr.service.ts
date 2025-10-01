@@ -5,7 +5,7 @@ import { STATE } from '../enums/STATE';
   providedIn: 'root'
 })
 export class StateMgrService {
-  private currentState: STATE = STATE.FIELD_EDIT;
+  private currentState: STATE = STATE.MAIN_VIEW;
   private menuOpen: boolean = false;
 
   @Output() stateChanged = new EventEmitter<STATE>();
@@ -44,7 +44,6 @@ export class StateMgrService {
   }
 
   toggleMenu() {
-    console.log(this.menuOpen);
     this.menuOpen = !this.menuOpen;
   }
 }

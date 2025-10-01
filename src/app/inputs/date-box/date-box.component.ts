@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { STATE } from '../../enums/STATE';
 import { StateMgrService } from '../../services/state-mgr.service';
 import { FieldBox } from '../../api/steelService';
+import { InputBoxBase } from '../input-box-base';
 
 @Component({
   selector: 'app-date-box',
@@ -11,19 +12,15 @@ import { FieldBox } from '../../api/steelService';
   templateUrl: './date-box.component.html',
   styleUrl: './date-box.component.css'
 })
-export class DateBoxComponent {
-  STATE = STATE;
-  @Input() isBeingCreated: boolean = false;
+export class DateBoxComponent extends InputBoxBase {
   isFromTo: boolean = false;
 
   dateFromValue = new Date(2021, 10, 10);
   dateToValue = new Date(2021, 10, 25);
 
-  @Output() deleteClicked = new EventEmitter<void>();
-
-  @Input() fieldInfo: FieldBox = new FieldBox();
-  
-  constructor(public stateMgr: StateMgrService) { }
+  constructor(public stateMgrL: StateMgrService) {
+    super(stateMgrL);
+  }
 
   ngOnInit() {
     this.fieldInfo.title = this.fieldInfo.title ?? 'Opis daty';
@@ -31,21 +28,13 @@ export class DateBoxComponent {
     this.fieldInfo.type = 'DB';
   }
 
-  onDelete() {
-    this.deleteClicked.emit();
-  }
-
   onCreate() {
+    this.fieldInfo.templateParentId = 0;
+    this.fieldInfo.memberId = 0;
     this.fieldInfo.isTemplate = true;
     this.fieldInfo.isSingleDate = !this.isFromTo;
     this.isBeingCreated = false;
-  }
 
-  onEdit() {
-    this.isBeingCreated = true;
-  }
-
-  shouldShowEdit() : boolean {
-    return this.stateMgr.getState() === STATE.FIELD_EDIT && !this.isBeingCreated;
+    this.editFinished.emit();
   }
 }

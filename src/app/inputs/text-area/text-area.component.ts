@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { StateMgrService } from '../../services/state-mgr.service';
 import { STATE } from '../../enums/STATE';
 import { FieldBox } from '../../api/steelService';
+import { InputBoxBase } from '../input-box-base';
 
 @Component({
   selector: 'app-text-area',
@@ -11,35 +12,24 @@ import { FieldBox } from '../../api/steelService';
   templateUrl: './text-area.component.html',
   styleUrl: './text-area.component.css'
 })
-export class TextAreaComponent {
-  STATE = STATE;
-  @Input() isBeingCreated = false;
-  @Input() fieldInfo: FieldBox = new FieldBox();  
+export class TextAreaComponent extends InputBoxBase {
 
-  @Output() deleteClicked = new EventEmitter<void>();
-  
-  constructor(public stateMgr: StateMgrService) { }
+  constructor(public stateMgrL: StateMgrService) {
+    super(stateMgrL);
+  }
 
   ngOnInit() {
     this.fieldInfo.title = this.fieldInfo.title ?? 'Opis pola tekstowego';
     this.fieldInfo.value = this.fieldInfo.value ?? '';
     this.fieldInfo.type = 'TA';
   }
-
-  onDelete() {
-    this.deleteClicked.emit();
-  }
-
+  
   onCreate() {
+    this.fieldInfo.templateParentId = 0;
+    this.fieldInfo.memberId = 0;
     this.fieldInfo.isTemplate = true;
     this.isBeingCreated = false;
-  }
 
-  onEdit() {
-    this.isBeingCreated = true;
-  }
-
-  shouldShowEdit() : boolean {
-    return this.stateMgr.getState() === STATE.FIELD_EDIT && !this.isBeingCreated;
+    this.editFinished.emit();
   }
 }

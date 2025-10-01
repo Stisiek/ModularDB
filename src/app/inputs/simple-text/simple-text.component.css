@@ -23,6 +23,7 @@ input:disabled {
     display: block;
     background: #336;
     border-radius: 10px;
+    border: 2px solid transparent;
     padding: 10px;
     margin: 10px 0;
 }

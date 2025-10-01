@@ -65,3 +65,9 @@ input::placeholder, option {
     right: 10px;
     z-index: 11 !important;
 }
+
+button:hover {
+    cursor: pointer;
+    border: 2px solid yellow !important;
+    color: white;
+}

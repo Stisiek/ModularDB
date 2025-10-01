@@ -5,6 +5,7 @@ import { NgForOf, NgIf } from '@angular/common';
 import { StateMgrService } from '../../services/state-mgr.service';
 import { STATE } from '../../enums/STATE';
 import { FieldBox } from '../../api/steelService';
+import { InputBoxBase } from '../input-box-base';
 
 
 @Component({
@@ -13,42 +14,30 @@ import { FieldBox } from '../../api/steelService';
   templateUrl: './images-box.component.html',
   styleUrl: './images-box.component.css'
 })
-export class ImagesBoxComponent {
-  STATE = STATE;
-  @Input() isBeingCreated: boolean = false;
+export class ImagesBoxComponent extends InputBoxBase {
   images: any = [];
   selectedFiles: File[] = [];
   selectedImage: number = 1;
   numberOfImages: number = 0;
   currentPhoto: any = null;
-
-  @Output() deleteClicked = new EventEmitter<void>();
-
-  @Input() fieldInfo: FieldBox = new FieldBox();
   
-  constructor(public stateMgr: StateMgrService) { }
+  constructor(public stateMgrL: StateMgrService) { 
+    super(stateMgrL);
+  }
 
   ngOnInit() {
     this.fieldInfo.title = this.fieldInfo.title ?? 'Opis zdjęć';
     this.fieldInfo.type = 'IB';
   }
 
-  onDelete() {
-    this.deleteClicked.emit();
-  }
-
   onCreate() {
+    this.fieldInfo.templateParentId = 0;
+    this.fieldInfo.memberId = 0;
     this.fieldInfo.isTemplate = true;
     this.fieldInfo.imageCount = this.images.length;
     this.isBeingCreated = false;
-  }
 
-  onEdit() {
-    this.isBeingCreated = true;
-  }
-
-  shouldShowEdit() : boolean {
-    return this.stateMgr.getState() === STATE.FIELD_EDIT && !this.isBeingCreated;
+    this.editFinished.emit();
   }
 
   addImage(value: any) {

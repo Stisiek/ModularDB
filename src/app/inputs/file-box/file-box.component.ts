@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { STATE } from '../../enums/STATE';
 import { StateMgrService } from '../../services/state-mgr.service';
 import { FieldBox } from '../../api/steelService';
+import { InputBoxBase } from '../input-box-base';
 
 @Component({
   selector: 'app-file-box',
@@ -11,16 +12,12 @@ import { FieldBox } from '../../api/steelService';
   templateUrl: './file-box.component.html',
   styleUrl: './file-box.component.css'
 })
-export class FileBoxComponent {
-  STATE = STATE;
-  @Input() isBeingCreated = false;
+export class FileBoxComponent extends InputBoxBase {
   fileNames: string[] = [];
 
-  @Output() deleteClicked = new EventEmitter<void>();
-
-  @Input() fieldInfo: FieldBox = new FieldBox();
-  
-  constructor(public stateMgr: StateMgrService) { }
+  constructor(public stateMgrL: StateMgrService) {
+    super(stateMgrL);
+  }
 
   ngOnInit() {
     this.fieldInfo.title = this.fieldInfo.title ?? 'Opis pliku';
@@ -30,23 +27,15 @@ export class FileBoxComponent {
     this.fieldInfo.fileCount = this.fileNames.length;
   }
 
-  onDelete() {
-    this.deleteClicked.emit();
-  }
-
   onCreate() {
+    this.fieldInfo.templateParentId = 0;
+    this.fieldInfo.memberId = 0;
     this.fieldInfo.isTemplate = true;
     this.fieldInfo.value = this.fileNames.join('|');
     this.fieldInfo.fileCount = this.fileNames.length;
     this.isBeingCreated = false;
-  }
 
-  onEdit() {
-    this.isBeingCreated = true;
-  }
-
-  shouldShowEdit() : boolean {
-    return this.stateMgr.getState() === STATE.FIELD_EDIT && !this.isBeingCreated;
+    this.editFinished.emit();
   }
 
   onFileSelected(value: any) {
