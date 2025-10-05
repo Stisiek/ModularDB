@@ -2,7 +2,7 @@
     <div *ngIf="!isBeingCreated">
         <label class="title">{{ fieldInfo.title }}</label>
         <div *ngFor="let item of fileNames; let i = index" class="fileNames" (click)="fileClicked(true, i)">
-            <label class="kross">{{item}}</label><label class="eks">X</label>
+            <label class="kross" *ngIf="fileNames">{{item}}</label><label class="eks">X</label>
         </div>
         <input type="file" #fileInput style="display: none;" (change)="onFileSelected($event)">
         <button type="button" (click)="fileInput.click()" class="custom-file-btn" [disabled]="stateMgr.getState() === STATE.FIELD_VIEW || stateMgr.getState() === STATE.FIELD_EDIT">Wybierz plik</button>

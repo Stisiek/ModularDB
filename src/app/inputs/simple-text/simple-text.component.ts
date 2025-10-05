@@ -31,6 +31,8 @@ export class SimpleTextComponent extends InputBoxBase {
     this.fieldInfo.memberId = 0;
     this.fieldInfo.isTemplate = true;
     this.isBeingCreated = false;
+    
+    this.stateMgr.setEdited(true);
     this.editFinished.emit();
   }
 }

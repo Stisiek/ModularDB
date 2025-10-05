@@ -29,6 +29,7 @@ export class AddFieldComponent {
   private boxMakerRef: ComponentRef<BoxMakerComponent> | null = null;
 
   private loadedItems: ComponentRef<any>[] = [];
+  private loadItemsOld: FieldBox[] = [];
   
   private createdItems: ComponentRef<any>[] = [];
   private updatedItems: ComponentRef<any>[] = [];
@@ -51,6 +52,8 @@ export class AddFieldComponent {
           }
           this.boxMakerRef?.destroy();
           this.boxMakerRef = null;
+
+          this.fieldRefresh();
           break;
       }
     });
@@ -65,6 +68,7 @@ export class AddFieldComponent {
     });
     
     this.saveMgr.getAllFieldBoxes().then(boxes => {
+      this.loadItemsOld.push(...boxes.map(b => Object.assign(new FieldBox(), b)));
       for (const box of boxes) {
         this.addComponent(box.type as BOXES, box);
       }
@@ -241,6 +245,14 @@ export class AddFieldComponent {
   }
 
   clearClicked() {
+    this.fieldRefresh();
+
+    this.stateMgr.setEdited(false);
+
+    this.stateMgr.setState(STATE.FIELD_EDIT);
+  }
+
+  fieldRefresh() {
     for (const ref of this.createdItems) {
       ref.destroy();
 
@@ -248,10 +260,31 @@ export class AddFieldComponent {
       this.AddPlusBtn();
     }
     this.createdItems = [];
+    this.updatedItems = [];
+    this.deletedItems = [];
+
+    this.stateMgr.setState(STATE.FIELD_VIEW);
+
+    for (const box of this.loadedItems) {
+      box.destroy();
+    }
+    this.loadedItems = [];
+    this.addingPosition = 1;
+
+    for (const box of this.loadItemsOld) {
+      let copy = Object.assign(new FieldBox(), box);
+      this.addComponent(box.type as BOXES, copy);
+    }
   }
 
   boxEditionHandler(updatedItem: ComponentRef<any> | null) {
     if (updatedItem == null) return;
     this.updatedItems.push(updatedItem);
+  }
+
+  onDestroy() {
+    this.stateMgr.stateChanged.unsubscribe();
+    this.saveMgr.saveClicked.unsubscribe();
+    this.saveMgr.clearClicked.unsubscribe();
   }
 }

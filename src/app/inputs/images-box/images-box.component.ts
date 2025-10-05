@@ -37,6 +37,7 @@ export class ImagesBoxComponent extends InputBoxBase {
     this.fieldInfo.imageCount = this.images.length;
     this.isBeingCreated = false;
 
+    this.stateMgr.setEdited(true);
     this.editFinished.emit();
   }
 

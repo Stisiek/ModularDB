@@ -71,3 +71,10 @@ button:hover {
     border: 2px solid yellow !important;
     color: white;
 }
+
+button:disabled, button:disabled:hover {
+    background: grey !important;
+    border: 1px solid #000 !important;
+    color: #333 !important;
+    cursor: not-allowed !important;
+}

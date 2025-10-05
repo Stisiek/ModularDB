@@ -24,6 +24,12 @@ export class FileBoxComponent extends InputBoxBase {
     this.fieldInfo.type = 'FB';
 
     this.fileNames = this.fieldInfo.value?.split('|') ?? [];
+    for (let i = this.fileNames.length - 1; i >= 0; i--) {
+      if (this.fileNames[i] === '') {
+        this.fileNames.splice(i, 1);
+      }
+    }
+    
     this.fieldInfo.fileCount = this.fileNames.length;
   }
 
@@ -35,6 +41,7 @@ export class FileBoxComponent extends InputBoxBase {
     this.fieldInfo.fileCount = this.fileNames.length;
     this.isBeingCreated = false;
 
+    this.stateMgr.setEdited(true);
     this.editFinished.emit();
   }
 

@@ -47,10 +47,15 @@ export class FooterComponent {
   }
 
   saveBtnClicked() {
+    this.stateMgr.setEdited(false);
     this.saveMgr.saveBtnClicked();
   }
 
   clearBtnClicked() {
     this.saveMgr.clearBtnClicked();
+  }
+
+  isSaveEnabled(): boolean {
+    return this.stateMgr.isEdited();
   }
 }

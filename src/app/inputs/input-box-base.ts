@@ -20,6 +20,7 @@ export abstract class InputBoxBase {
   }
 
   onDelete() {
+    this.stateMgr.setEdited(true);
     this.deleteClicked.emit();
   }
 

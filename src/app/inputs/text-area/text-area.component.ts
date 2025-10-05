@@ -30,6 +30,7 @@ export class TextAreaComponent extends InputBoxBase {
     this.fieldInfo.isTemplate = true;
     this.isBeingCreated = false;
 
+    this.stateMgr.setEdited(true);
     this.editFinished.emit();
   }
 }

@@ -7,6 +7,7 @@ import { STATE } from '../enums/STATE';
 export class StateMgrService {
   private currentState: STATE = STATE.MAIN_VIEW;
   private menuOpen: boolean = false;
+  private edited: boolean = false;
 
   @Output() stateChanged = new EventEmitter<STATE>();
 
@@ -19,6 +20,14 @@ export class StateMgrService {
 
   getState(): STATE {
     return this.currentState;
+  }
+
+  isEdited(): boolean {
+    return this.edited;
+  }
+
+  setEdited(value: boolean) {
+    this.edited = value;
   }
 
   isEditing(): boolean {

@@ -35,6 +35,7 @@ export class DateBoxComponent extends InputBoxBase {
     this.fieldInfo.isSingleDate = !this.isFromTo;
     this.isBeingCreated = false;
 
+    this.stateMgr.setEdited(true);
     this.editFinished.emit();
   }
 }
