@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { QuickOptionsComponent } from "../quick-options/quick-options.component";
 import { StateMgrService } from '../../services/state-mgr.service';
 import { STATE } from '../../enums/STATE';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-header',
@@ -12,10 +13,11 @@ import { STATE } from '../../enums/STATE';
 export class HeaderComponent {
   appName = 'Steel App';
 
-  constructor(private stateMgr: StateMgrService) { }
+  constructor(private stateMgr: StateMgrService, private router: Router) { }
 
   navigateToHome() {
     this.stateMgr.setState(STATE.IDLE);
+    this.router.navigate(['/']);
   }
 
   menuClick() {

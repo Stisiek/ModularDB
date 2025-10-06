@@ -10,19 +10,22 @@ import { MainViewComponent } from "./statics/main-view/main-view.component";
 import { FooterComponent } from "./statics/footer/footer.component";
 import { LoadingScreenComponent } from "./statics/loading-screen/loading-screen.component";
 import { LoginMgrService } from './services/login-mgr.service';
+import { MenuPopUpComponent } from './statics/menu-pop-up/menu-pop-up.component';
+import { StateMgrService } from './services/state-mgr.service';
 
 @Component({
   selector: 'app-root',
-  imports: [HeaderComponent, MainViewComponent, FooterComponent, LoadingScreenComponent],
+  imports: [HeaderComponent, MainViewComponent, FooterComponent, LoadingScreenComponent, RouterOutlet, MenuPopUpComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
 export class AppComponent {
   title = 'tomsteel-app';
 
-  constructor(private loginMgr: LoginMgrService) { }
+  constructor(private loginMgr: LoginMgrService, private stateMgr: StateMgrService) { }
 
   ngOnInit() {
     this.loginMgr.logInWithToken();
+    this.stateMgr.updateStateFromRoute();
   }
 }

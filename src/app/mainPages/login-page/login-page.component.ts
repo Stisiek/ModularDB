@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { LoginMgrService } from '../../services/login-mgr.service';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login-page',
@@ -12,13 +13,18 @@ export class LoginPageComponent {
   login: string = '';
   password: string = '';
 
-  constructor(private loginMgr: LoginMgrService) { }
+  constructor(private loginMgr: LoginMgrService, private router: Router) { }
 
   ngOnInit() {
     // Initialize any necessary data or state
   }
 
   logIn() {
-    this.loginMgr.logIn(this.login, this.password);
+    this.loginMgr.logIn(this.login, this.password).then(isLoggedIn => {
+      console.log('Login successful:', isLoggedIn);
+      if (isLoggedIn) {
+        this.router.navigate(['/']);
+      }
+    });
   }
 }

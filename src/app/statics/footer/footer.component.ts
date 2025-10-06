@@ -4,6 +4,8 @@ import { StateMgrService } from '../../services/state-mgr.service';
 import { NgForOf, NgIf } from '@angular/common';
 import { Template } from '../../api/steelService';
 import { STATE } from '../../enums/STATE';
+import { Confirmable } from '../../decorators/confirmable.decorator';
+import { ConfirmationModalService } from '../../services/confirmation-modal.service';
 
 @Component({
   selector: 'app-footer',
@@ -14,7 +16,7 @@ import { STATE } from '../../enums/STATE';
 export class FooterComponent {
   templates: Template[] = [];
 
-  constructor(private saveMgr: SaveMgrService, private stateMgr: StateMgrService) { }
+  constructor(private saveMgr: SaveMgrService, private stateMgr: StateMgrService, public confirmationModalService: ConfirmationModalService) { }
 
   isEditing() {
     return this.stateMgr.isEditing();
@@ -39,6 +41,7 @@ export class FooterComponent {
     this.stateMgr.setState(STATE.FIELD_EDIT);
   }
 
+  @Confirmable('Chcesz porzucić zmiany i anulować?')
   cancelBtnClicked() {
     if (this.stateMgr.getState() === STATE.FIELD_EDIT) {
       this.stateMgr.setState(STATE.FIELD_VIEW);
@@ -46,11 +49,13 @@ export class FooterComponent {
     }
   }
 
+  @Confirmable('Czy na pewno chcesz zapisać zmiany?')
   saveBtnClicked() {
     this.stateMgr.setEdited(false);
     this.saveMgr.saveBtnClicked();
   }
 
+  @Confirmable('Czy na pewno chcesz zresetować wartość wszystkich pól?')
   clearBtnClicked() {
     this.saveMgr.clearBtnClicked();
   }

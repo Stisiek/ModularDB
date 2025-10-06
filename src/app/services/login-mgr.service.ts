@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Client, UserInfoForUserDto } from '../api/steelService';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -29,36 +30,43 @@ export class LoginMgrService {
     return this.isLoggedInStatus;
   }
 
-  logIn(login: string, password: string): boolean {
-    this.encryptOnce(password).then(encryptedPassword => {
-      this.api.logIn(login, encryptedPassword).then(result => {
-        this.userInfo = result ?? new UserInfoForUserDto();
-        this.configureCookie(this.userInfo.token, 'auth_token');
-        this.isLoggedInStatus = true;
-        return true;
-      }).catch(error => {
-        console.error('Login failed', error);
-        this.isLoggedInStatus = false;
-      })
-    });
-
-    return false;
+  async logIn(login: string, password: string): Promise<boolean> {
+    try {
+      const encryptedPassword = await this.encryptOnce(password);
+      const result = await this.api.logIn(login, encryptedPassword);
+      
+      this.userInfo = result ?? new UserInfoForUserDto();
+      this.configureCookie(this.userInfo.token, 'auth_token');
+      this.isLoggedInStatus = true;
+      
+      return true;
+    } catch (error) {
+      console.error('Login failed', error);
+      this.isLoggedInStatus = false;
+      return false;
+    }
   }
 
-  logInWithToken(): boolean {
+  logInWithToken(): Promise<boolean> {
     this.getCookie('auth_token').then(cachedToken => {
       if (cachedToken) {
         this.userInfo.token = cachedToken;
         this.continueLogin();
-        return true;
+        return new Promise<boolean>((resolve) => {
+          resolve(true);
+        });
       } else {
         console.error('No token found in cookies');
         this.isLoggedInStatus = false;
-        return false;
+        return new Promise<boolean>((resolve) => {
+          resolve(false);
+        });
       }
     });
 
-    return false;
+    return new Promise<boolean>((resolve) => {
+      resolve(false);
+    });
   }
 
   continueLogin() {

@@ -1,5 +1,7 @@
 import { EventEmitter, Injectable, Output } from '@angular/core';
 import { STATE } from '../enums/STATE';
+import { NavigationEnd, Router } from '@angular/router';
+import { filter } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +13,13 @@ export class StateMgrService {
 
   @Output() stateChanged = new EventEmitter<STATE>();
 
-  constructor() { }
+  constructor(private router: Router) { 
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+    ).subscribe(() => {
+      this.updateStateFromRoute();
+    });
+  }
 
   setState(state: STATE) {
     this.currentState = state;
@@ -54,5 +62,37 @@ export class StateMgrService {
 
   toggleMenu() {
     this.menuOpen = !this.menuOpen;
+  }
+
+  updateStateFromRoute() {
+    switch(this.router.url) {
+      case '/':
+        this.setState(STATE.IDLE);
+        break;
+
+      case '/search':
+        this.setState(STATE.MAIN_VIEW);
+        break;
+
+      case '/templates':
+        this.setState(STATE.TEMPLATE_VIEW);
+        break;
+
+      case '/fieldboxes':
+        this.setState(STATE.FIELD_VIEW);
+        break;
+
+      case '/adminpanel':
+        this.setState(STATE.SUPER_USER_PANEL_VIEW);
+        break;
+
+      case '/login':
+        this.setState(STATE.IDLE);
+        break;
+
+      default:
+        this.setState(STATE.IDLE);
+        break;
+    }
   }
 }

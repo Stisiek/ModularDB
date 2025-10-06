@@ -22,8 +22,6 @@ import { SaveMgrService } from '../../services/save-mgr.service';
 export class AddFieldComponent {
   addingPosition: number = 1;
 
-  newBox: FieldBox = new FieldBox();
-
   @ViewChild('fieldBoxContainer', { read: ViewContainerRef }) fieldBoxContainer!: ViewContainerRef;
 
   private boxMakerRef: ComponentRef<BoxMakerComponent> | null = null;
@@ -39,34 +37,36 @@ export class AddFieldComponent {
 
   ngAfterViewInit() {
     this.stateMgr.stateChanged.subscribe(() => {
-      switch (this.stateMgr.getState()) {
-        case STATE.FIELD_EDIT:
-          if (this.boxMakerRef !== null) {
-            return;
-          }
-          this.AddPlusBtn();
-          break;
-        case STATE.FIELD_VIEW:
-          if (this.boxMakerRef === null) {
-            return;
-          }
-          this.boxMakerRef?.destroy();
-          this.boxMakerRef = null;
+      if (this.stateMgr.getState() === STATE.FIELD_EDIT) {
+        if (this.boxMakerRef !== null) {
+          return;
+        }
+        this.AddPlusBtn();
+      } else {
+        if (this.boxMakerRef === null) {
+          return;
+        }
+        this.boxMakerRef?.destroy();
+        this.boxMakerRef = null;
 
-          this.fieldRefresh();
-          break;
+        this.fieldRefresh();
       }
     });
 
-    this.saveMgr.saveClicked.subscribe(() => {
-      //dodac okienko czy na pewno itp
-      this.saveAll();
+    this.saveMgr.saveClicked.subscribe(async () => {
+      await this.saveAll();
+      this.loadRawFieldBoxes();
     });
 
     this.saveMgr.clearClicked.subscribe(() => {
       this.clearClicked();
     });
     
+    this.loadRawFieldBoxes();
+  }
+
+  loadRawFieldBoxes() {
+    this.clearAllFields();
     this.saveMgr.getAllFieldBoxes().then(boxes => {
       this.loadItemsOld.push(...boxes.map(b => Object.assign(new FieldBox(), b)));
       for (const box of boxes) {
@@ -208,7 +208,7 @@ export class AddFieldComponent {
     return null;
   }
 
-  saveAll() {
+  async saveAll() {
     let boxList: InsertFieldBoxesDto[] = new Array<InsertFieldBoxesDto>();
 
     const boxesCreateDto = new InsertFieldBoxesDto();
@@ -239,7 +239,7 @@ export class AddFieldComponent {
       this.stateMgr.setState(STATE.FIELD_VIEW);
       return;
     }
-    this.saveMgr.saveFieldBoxes(boxList).then(() => {
+    await this.saveMgr.saveFieldBoxes(boxList).then(() => {
       this.stateMgr.setState(STATE.FIELD_VIEW);
     });
   }
@@ -253,15 +253,7 @@ export class AddFieldComponent {
   }
 
   fieldRefresh() {
-    for (const ref of this.createdItems) {
-      ref.destroy();
-
-      this.boxMakerRef?.destroy();
-      this.AddPlusBtn();
-    }
-    this.createdItems = [];
-    this.updatedItems = [];
-    this.deletedItems = [];
+    this.clearAllChanges();
 
     this.stateMgr.setState(STATE.FIELD_VIEW);
 
@@ -275,6 +267,29 @@ export class AddFieldComponent {
       let copy = Object.assign(new FieldBox(), box);
       this.addComponent(box.type as BOXES, copy);
     }
+  }
+
+  clearAllFields() {
+    this.clearAllChanges();
+    this.loadItemsOld = [];
+    this.addingPosition = 1;
+
+    for (const box of this.loadedItems) {
+      box.destroy();
+    }
+  }
+
+  clearAllChanges() {
+    for (const ref of this.createdItems) {
+      ref.destroy();
+
+      this.boxMakerRef?.destroy();
+      this.AddPlusBtn();
+    }
+
+    this.createdItems = [];
+    this.updatedItems = [];
+    this.deletedItems = [];
   }
 
   boxEditionHandler(updatedItem: ComponentRef<any> | null) {
