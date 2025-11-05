@@ -1,0 +1,36 @@
+.plusButton {
+    background-color: rgb(61, 61, 172);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 28px;
+    font-weight: bolder;
+}
+
+.box-maker {
+    margin: 16px;
+}
+
+.menuButtons button {
+    width: 50%;
+    border-radius: 10px;
+    border: 2px solid #333;
+    background-color: rgb(61, 61, 172);
+    color: white;
+    padding: 5px;
+    margin-top: 5px;
+    align-items: center;
+}
+
+.menuButtons button:disabled {
+    background-color: #ccc;
+    color: #666;
+    border: 2px solid #999;
+}
+
+select {
+    width: 100%;
+    border-radius: 10px;
+}

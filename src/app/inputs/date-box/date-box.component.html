@@ -33,7 +33,7 @@
             <label>Od - Do</label>
         </div>
     </div>
-    <div *ngIf="isBeingCreated">
+    <div *ngIf="isBeingCreated || isTemplateMade">
         <button *ngIf="isBeingCreated" (click)="onCreate()" class="baton">Zapisz</button>
         <button (click)="onDelete()" class="baton">Usuń</button>
     </div>

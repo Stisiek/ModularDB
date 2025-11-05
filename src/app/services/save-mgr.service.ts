@@ -7,7 +7,7 @@ import { LoginMgrService } from './login-mgr.service';
 })
 export class SaveMgrService {
   private unsavedChanges: boolean = false;
-  @Output() saveClicked: EventEmitter<void> = new EventEmitter<void>();
+  @Output() saveClicked: EventEmitter<string> = new EventEmitter<string>();
   @Output() cancelClicked: EventEmitter<void> = new EventEmitter<void>();
   @Output() clearClicked: EventEmitter<void> = new EventEmitter<void>();
 
@@ -31,8 +31,8 @@ export class SaveMgrService {
     this.unsavedChanges = false;
   }
 
-  saveBtnClicked() {
-    this.saveClicked.emit();
+  saveBtnClicked(templateTitle: string = '') {
+    this.saveClicked.emit(templateTitle);
   }
 
   cancelBtnClicked() {

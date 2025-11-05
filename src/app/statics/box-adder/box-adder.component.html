@@ -1,1 +1,13 @@
-<p>box-adder works!</p>
+<div class="box-maker">
+    <button (click)="addBox()" *ngIf="!addingEnabled" class="plusButton">+</button>
+    <div *ngIf="addingEnabled">
+        <label>Wybierz pole do dodania:</label>
+        <select [(ngModel)]="chosenField">
+            <option *ngFor="let box of fieldBoxes" [ngValue]="box">{{ box.title }}</option>
+        </select>
+        <div class="menuButtons">
+            <button (click)="nextClicked()" [disabled]="!chosenField">Dodaj</button>
+            <button (click)="cancelClicked()">Anuluj</button>
+        </div>
+    </div>
+</div>

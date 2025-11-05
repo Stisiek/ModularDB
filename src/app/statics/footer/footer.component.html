@@ -4,17 +4,18 @@
     </div>
     <div class="footerFieldBoxEdit" *ngIf="isEditing()">
         <button class="saveBtn" (click)="saveBtnClicked()" [disabled]="!isSaveEnabled()" [title]="isSaveEnabled() ? 'Zapisz' : 'Nie można zapisać, brak zmian'">Zapisz</button>
-        <button class="clearBtn" (click)="clearBtnClicked()">Resetuj zmiany</button>
+        <button class="clearBtn" (click)="clearBtnClicked()" *ngIf="!isTemplate()">Resetuj zmiany</button>
         <button class="cancelBtn" (click)="cancelBtnClicked()">Anuluj</button>
     </div>
     <div *ngIf="showEditButton()">
-        <button class="editBtn" (click)="editBtnClicked()">Edytuj</button>
+        <button class="editBtn" (click)="editBtnClicked()" *ngIf="!showAdd()">Edytuj</button>
+        <button class="editBtn" (click)="addBtnClicked()" *ngIf="showAdd()">Dodaj</button>
     </div>
     <div>
-        <input type="text" class="templateNameInput" placeholder="Nazwa szablonu" *ngIf="isTemplateEdit()"/>
-        <select class="templateSelect" *ngIf="isTemplate()">
-            <option value="newTemplate" disabled selected>Nowy szablon</option>
-            <option *ngFor="let template of templates" [value]="template.id">{{template.name}}</option>
+        <input type="text" class="templateNameInput" placeholder="Nazwa szablonu" *ngIf="isTemplateEdit()" [(ngModel)]="newTemplateName"/>
+        <select class="templateSelect" *ngIf="isTemplate()" (ngModelChange)="onTemplateSelect($event)" [(ngModel)]="selectedTemplateId">
+            <option value="newTemplate" selected>Nowy szablon</option>
+            <option *ngFor="let template of temps | keyvalue" [value]="template.key">{{template.value}}</option>
         </select>
     </div>
 </div>

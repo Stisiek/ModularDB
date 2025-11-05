@@ -11,6 +11,7 @@ import { StateMgrService } from '../../services/state-mgr.service';
 import { STATE } from '../../enums/STATE';
 import { ActionType, Client, FieldBox, InsertFieldBoxesDto } from '../../api/steelService';
 import { SaveMgrService } from '../../services/save-mgr.service';
+import { FieldMakerBase } from '../field-maker-base';
 
 @Component({
   selector: 'app-add-field',
@@ -19,7 +20,7 @@ import { SaveMgrService } from '../../services/save-mgr.service';
   styleUrl: './add-field.component.css',
   encapsulation: ViewEncapsulation.None
 })
-export class AddFieldComponent {
+export class AddFieldComponent extends FieldMakerBase {
   addingPosition: number = 1;
 
   @ViewChild('fieldBoxContainer', { read: ViewContainerRef }) fieldBoxContainer!: ViewContainerRef;
@@ -33,7 +34,7 @@ export class AddFieldComponent {
   private updatedItems: ComponentRef<any>[] = [];
   private deletedItems: ComponentRef<any>[] = [];
 
-  constructor(private stateMgr: StateMgrService, private saveMgr: SaveMgrService, private api: Client) { }
+  constructor(private stateMgr: StateMgrService, private saveMgr: SaveMgrService, private api: Client) { super(); }
 
   ngAfterViewInit() {
     this.stateMgr.stateChanged.subscribe(() => {

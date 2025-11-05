@@ -8,6 +8,7 @@ export abstract class InputBoxBase {
   STATE = STATE;
   @Input() fieldInfo: FieldBox = new FieldBox();
   @Input() isBeingCreated = false;
+  @Input() isTemplateMade = false;
   
   @Output() deleteClicked = new EventEmitter<void>();
   @Output() editFinished = new EventEmitter<void>();
