@@ -31,6 +31,7 @@ export class EditTemplateComponent extends FieldMakerBase {
   @ViewChild('fieldBoxContainerRight', { read: ViewContainerRef }) fieldBoxContainerRight!: ViewContainerRef;
 
   private allRawFields: FieldBox[] = [];
+  private allRawFieldsForSearch: FieldBox[] = [];
 
   private loadedSearchItems: ComponentRef<any>[] = [];
   private loadedItems: ComponentRef<any>[] = [];
@@ -46,26 +47,38 @@ export class EditTemplateComponent extends FieldMakerBase {
     this.loadTemplate();
     this.AddPermanentBoxes();
     this.allRawFields = await this.templateService.getFields();
+    this.allRawFieldsForSearch = Object.assign([], this.allRawFields);
 
     this.saveMgr.saveClicked.subscribe(async (templateTitle) => {
       await this.saveAll(templateTitle);
       this.loadTemplate();
     });
 
-    this.saveMgr.cancelClicked.subscribe(() => {
-      this.loadTemplate();
+    this.saveMgr.cancelClicked.subscribe(async () => {
+      // Usun wszystkie dokonane zmiany
+      for (let item of this.createdItems) {
+        item.destroy();
+      }
+
+      for (let item of this.deletedItems) {
+        this.addComponent(item.instance.fieldInfo.type as BOXES, item.instance.fieldInfo);
+      }
+
+      this.deletedItems = [];
+      this.createdItems = [];
     });
 
     this.saveMgr.clearClicked.subscribe(() => {
       this.loadTemplate();
     });
 
-    this.stateMgr.stateChanged.subscribe((newState) => {
+    this.stateMgr.stateChanged.subscribe(async (newState) => {
+      this.allRawFields = await this.templateService.getFields();
+      this.allRawFieldsForSearch = Object.assign([], this.allRawFields);
       if (newState === STATE.TEMPLATE_VIEW) {
         this.RemoveAllPluses();
         this.setEditForAllItems(false);
-      }
-      if (newState === STATE.TEMPLATE_EDIT) {
+      } else if (newState === STATE.TEMPLATE_EDIT) {
         this.AddAllPluses();
         this.setEditForAllItems(true);
       }
@@ -84,12 +97,7 @@ export class EditTemplateComponent extends FieldMakerBase {
   clearAll() {
     this.RemoveAllPluses();
     
-    for (let item of this.loadedItems) {
-      item.destroy();
-    }
-    for (let item of this.loadedSearchItems) {
-      item.destroy();
-    }
+    this.clearLoad();
 
     this.fieldBoxContainerSearch.clear();
     this.fieldBoxContainerLeft.clear();
@@ -99,6 +107,18 @@ export class EditTemplateComponent extends FieldMakerBase {
     this.deletedItems = [];
 
     this.AddPermanentBoxes();
+  }
+
+  clearLoad() {
+    for (let item of this.loadedItems) {
+      item.destroy();
+    }
+    for (let item of this.loadedSearchItems) {
+      item.destroy();
+    }
+
+    this.loadedItems = [];
+    this.loadedSearchItems = [];
   }
 
   setEditForAllItems(setMode: boolean) {
@@ -192,27 +212,51 @@ export class EditTemplateComponent extends FieldMakerBase {
     if (column) {
       const boxMakerRef = column.createComponent(BoxAdderComponent);
       if (column === this.fieldBoxContainerSearch) {
+        for (var item of this.loadedSearchItems) {
+          // Filtrowanie search itemow ktore sa juz na templacie
+          if (this.allRawFieldsForSearch.find(x => x.id === item.instance.fieldInfo.templateParentId)) {
+            this.allRawFieldsForSearch = this.allRawFieldsForSearch.filter(f => f.id !== item.instance.fieldInfo.templateParentId);
+          }
+        }
+        boxMakerRef.instance.fieldBoxes = this.allRawFieldsForSearch;
         boxMakerRef.instance.searchMode = true;
+      } else {
+        for (var item of this.loadedItems) {
+          // Filtrowanie itemow ktore sa juz na templacie
+          if (this.allRawFields.find(x => x.id === item.instance.fieldInfo.templateParentId)) {
+            this.allRawFields = this.allRawFields.filter(f => f.id !== item.instance.fieldInfo.templateParentId);
+          }
+        }
+        boxMakerRef.instance.fieldBoxes = this.allRawFields;
       }
-      boxMakerRef.instance.fieldBoxes = this.allRawFields;
+
       if (isAddingEnabled) {
         boxMakerRef.instance.addingEnabled = true;
       }
+
       boxMakerRef.instance.addClicked.subscribe(() => {
         this.RemoveAllPluses();
         this.AddPlusBtn(column, true);
       });
+
       boxMakerRef.instance.canceled.subscribe(() => {
         this.RemoveAllPluses();
         this.AddAllPluses();
       });
+
       boxMakerRef.instance.boxAdded.subscribe((box: FieldBox) => {
         this.RemoveAllPluses();
         this.addComponent(box.type as BOXES, box, column);
         this.stateMgr.setEdited(true);
-        this.allRawFields = this.allRawFields.filter(f => f.id !== box.id);
+        if (column === this.fieldBoxContainerSearch) {
+          this.allRawFieldsForSearch = this.allRawFieldsForSearch.filter(f => f.id !== box.id);
+        } else {
+          this.allRawFields = this.allRawFields.filter(f => f.id !== box.id);
+        }
+        
         this.AddAllPluses();
       });
+
       this.allPluses.push(boxMakerRef);
     }
   }
@@ -249,9 +293,10 @@ export class EditTemplateComponent extends FieldMakerBase {
     }
 
     newItem!.instance.deleteClicked.subscribe(() => {
-      if (this.loadedItems.includes(newItem)) {
+      if (this.loadedItems.includes(newItem) || this.loadedSearchItems.includes(newItem)) {
         this.deletedItems.push(Object.assign(new FieldBox(), newItem));
         this.loadedItems = this.loadedItems.filter(ref => ref !== newItem);
+        this.loadedSearchItems = this.loadedSearchItems.filter(ref => ref !== newItem);
       }
       newItem?.destroy();
       this.createdItems = this.createdItems.filter(ref => ref !== newItem);
@@ -319,11 +364,6 @@ export class EditTemplateComponent extends FieldMakerBase {
 
     if (boxesDeleteDto.listOfFieldBoxes.length !== 0) {
       boxList.push(boxesDeleteDto);
-    }
-    
-    if (boxList.length === 0) {
-      this.stateMgr.setState(STATE.TEMPLATE_VIEW);
-      return;
     }
     
     for(var item of boxesCreateDto.listOfFieldBoxes) {

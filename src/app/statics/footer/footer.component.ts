@@ -115,7 +115,8 @@ export class FooterComponent {
     }
 
     if (templateId === 'newTemplate') {
-      this.newTemplateName = this.oldTemplateName = '';
+      this.newTemplateName = '';
+      this.oldTemplateName = '';
       this.templateService.templateSelected(0);
     } else {
       this.oldTemplateName = this.temps[templateId];
