@@ -22,7 +22,7 @@ import { LoginMgrService } from '../../services/login-mgr.service';
   encapsulation: ViewEncapsulation.None
 })
 export class EditTemplateComponent extends FieldMakerBase {
-  templateId: number = 1; // Example template ID
+  templateId: number = 0; // Example template ID
   template: Template = {} as Template;
 
   @ViewChild('fieldBoxContainerSearch', { read: ViewContainerRef }) fieldBoxContainerSearch!: ViewContainerRef;
@@ -321,7 +321,7 @@ export class EditTemplateComponent extends FieldMakerBase {
       this.createdItems.push(newItem!);
     }
 
-    if (existingBox?.searchPosition !== undefined && existingBox.searchPosition > 0) {
+    if (newItem.instance.fieldInfo.searchPosition !== undefined && newItem.instance.fieldInfo.searchPosition > 0) {
       this.loadedSearchItems.push(newItem);
     } else {
       this.loadedItems.push(newItem);
@@ -354,30 +354,34 @@ export class EditTemplateComponent extends FieldMakerBase {
     boxesCreateDto.listOfFieldBoxes = this.collectAllNewBoxes() ?? [];
     boxesCreateDto.actionType = ActionType.Create;
 
-    if (boxesCreateDto.listOfFieldBoxes.length !== 0) {
-      boxList.push(boxesCreateDto);
-    }
-    
-    const boxesDeleteDto = new InsertFieldBoxesDto();
-    boxesDeleteDto.listOfFieldBoxes = this.collectAllDeletedBoxes() ?? [];
-    boxesDeleteDto.actionType = ActionType.Delete;
+    let fieldForCheck: FieldBox[] = [];
+    await this.templateService.getFields().then(allFields => {
+      fieldForCheck = allFields;  
+    });
 
-    if (boxesDeleteDto.listOfFieldBoxes.length !== 0) {
-      boxList.push(boxesDeleteDto);
-    }
-    
-    for(var item of boxesCreateDto.listOfFieldBoxes) {
-      item.templateParentId = item.id;
-      item.id = 0;
+    templateToSave.items = this.loadedItems.map(ref => this.tryExtractFieldBox(ref.instance)).filter(fb => fb !== null) as FieldBox[];
 
-      if (item.searchPosition !== undefined && item.searchPosition > 0) {
-        templateToSave.searchItems.push(item);
-      } else {
-        templateToSave.items.push(item);
+    for (let item of templateToSave.items) {
+      if (fieldForCheck.find(field => field.id === item.id)) {
+        item.templateParentId = item.id;
+        item.id = 0;
       }
     }
+
+    templateToSave.searchItems = this.loadedSearchItems.map(ref => this.tryExtractFieldBox(ref.instance)).filter(fb => fb !== null) as FieldBox[];
+    templateToSave.searchItems = templateToSave.searchItems.filter(item => item.position !== 1 && item.position !== 2);
+
+    for (let item of templateToSave.searchItems) {
+      if (fieldForCheck.find(field => field.id === item.id)) {
+        item.templateParentId = item.id;
+        item.id = 0;
+      }
+    }
+
     templateToSave.name = templateTitle;
 
+    console.log(templateToSave.items);
+    console.log(templateToSave.searchItems);
     this.api.saveNewTemplate(this.loginMgr.getToken() ?? '', templateToSave).then(() => {
       this.stateMgr.setState(STATE.TEMPLATE_VIEW);
     });
