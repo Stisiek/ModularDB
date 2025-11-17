@@ -6,6 +6,7 @@
         <button class="saveBtn" (click)="saveBtnClicked()" [disabled]="!isSaveEnabled()" [title]="isSaveEnabled() ? 'Zapisz' : 'Nie można zapisać, brak zmian'">Zapisz</button>
         <button class="clearBtn" (click)="clearBtnClicked()" *ngIf="!isTemplate()">Resetuj zmiany</button>
         <button class="cancelBtn" (click)="cancelBtnClicked()">Anuluj</button>
+        <button class="cancelBtn" (click)="deleteBtnClicked()" *ngIf="isTemplate() && !isNewTemplate()">Usuń szablon</button>
     </div>
     <div *ngIf="showEditButton()">
         <button class="editBtn" (click)="editBtnClicked()" *ngIf="!showAdd()">Edytuj</button>

@@ -10,6 +10,7 @@ export class SaveMgrService {
   @Output() saveClicked: EventEmitter<string> = new EventEmitter<string>();
   @Output() cancelClicked: EventEmitter<void> = new EventEmitter<void>();
   @Output() clearClicked: EventEmitter<void> = new EventEmitter<void>();
+  @Output() deleteClicked: EventEmitter<void> = new EventEmitter<void>();
 
   constructor(private api: Client, private loginMgr: LoginMgrService) { }
 
@@ -41,6 +42,10 @@ export class SaveMgrService {
 
   clearBtnClicked() {
     this.clearClicked.emit();
+  }
+
+  deleteTemplateBtnClicked() {
+    this.deleteClicked.emit();
   }
 
   saveFieldBoxes(info: InsertFieldBoxesDto[]): Promise<void> {

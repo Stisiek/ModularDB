@@ -11,7 +11,7 @@
             <button (click)="nextImage()" [disabled]="selectedImage >= images.length" *ngIf="images.length > 1">&#8594;</button>
         </div>
         <input type="file" #fileInput style="display: none;" (change)="onImageSelect($event)">
-        <button type="button" (click)="fileInput.click()" class="custom-file-btn" [disabled]="stateMgr.getState() === STATE.FIELD_VIEW || stateMgr.getState() === STATE.FIELD_EDIT">Wybierz plik</button>
+        <button type="button" (click)="fileInput.click()" class="custom-file-btn" [disabled]="[STATE.FIELD_EDIT, STATE.FIELD_VIEW, STATE.TEMPLATE_EDIT, STATE.TEMPLATE_VIEW].includes(stateMgr.getState())">Wybierz plik</button>
     </div>
     <div *ngIf="isBeingCreated">
         <input type="text" [(ngModel)]="fieldInfo.title" />

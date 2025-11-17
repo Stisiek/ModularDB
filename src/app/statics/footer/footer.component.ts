@@ -41,6 +41,10 @@ export class FooterComponent {
     return this.stateMgr.isTemplate();
   }
 
+  removeTemplate() {
+    delete this.temps[this.selectedTemplateId];
+  }
+
   showEditButton() : boolean {
     return this.stateMgr.getState() === STATE.FIELD_VIEW || 
     this.stateMgr.getState() === STATE.TEMPLATE_VIEW || 
@@ -76,6 +80,7 @@ export class FooterComponent {
   saveBtnClicked() {
     this.stateMgr.setEdited(false);
     this.saveMgr.saveBtnClicked(this.newTemplateName);
+    this.temps[this.selectedTemplateId] = this.newTemplateName;
   }
 
   @Confirmable('Czy na pewno chcesz zresetować wartość wszystkich pól?')
@@ -83,12 +88,31 @@ export class FooterComponent {
     this.saveMgr.clearBtnClicked();
   }
 
-  isSaveEnabled(): boolean {
-    return this.stateMgr.isEdited() || this.templateNameDiffers();
+  @Confirmable('Czy na pewno chcesz usunąć ten szablon? Tej operacji nie można cofnąć.')
+  deleteBtnClicked() {
+    this.saveMgr.deleteTemplateBtnClicked();
+    this.removeTemplate();
+    this.selectedTemplateId = 'newTemplate';
   }
 
-  templateNameDiffers(): boolean {
-    return this.oldTemplateName !== this.newTemplateName;
+  isSaveEnabled(): boolean {
+    let edited = this.stateMgr.isEdited();
+    let nameChanged = this.isNameChanged();
+
+    if (this.newTemplateName.trim() !== '' && edited) return true;
+    if (nameChanged && edited) return true;
+    if (!this.isNewTemplate() && nameChanged) return true;
+
+    return false;
+  }
+
+  isNewTemplate() {
+    return this.selectedTemplateId === 'newTemplate';
+  }
+
+  isNameChanged() {
+    if (this.oldTemplateName !== this.newTemplateName) return true;
+    return false;
   }
 
   loadTemplateName() {

@@ -13,6 +13,7 @@ import { TemplateService } from '../../services/template.service';
 import { StateMgrService } from '../../services/state-mgr.service';
 import { STATE } from '../../enums/STATE';
 import { LoginMgrService } from '../../services/login-mgr.service';
+import { ConfirmationModalService } from '../../services/confirmation-modal.service';
 
 @Component({
   selector: 'app-edit-template',
@@ -41,7 +42,7 @@ export class EditTemplateComponent extends FieldMakerBase {
   private createdItems: ComponentRef<any>[] = [];
   private deletedItems: ComponentRef<any>[] = [];
 
-  constructor(private api: Client, private saveMgr: SaveMgrService, private templateService: TemplateService, private stateMgr: StateMgrService, private loginMgr: LoginMgrService) { super(); }
+  constructor(private api: Client, public confirmationModalService: ConfirmationModalService, private saveMgr: SaveMgrService, private templateService: TemplateService, private stateMgr: StateMgrService, private loginMgr: LoginMgrService) { super(); }
 
   async ngAfterViewInit() {
     this.loadTemplate();
@@ -61,7 +62,9 @@ export class EditTemplateComponent extends FieldMakerBase {
       }
 
       for (let item of this.deletedItems) {
-        this.addComponent(item.instance.fieldInfo.type as BOXES, item.instance.fieldInfo);
+        if (item.instance.id > 0) {
+          this.addComponent(item.instance.fieldInfo.type as BOXES, item.instance.fieldInfo);
+        }
       }
 
       this.deletedItems = [];
@@ -70,6 +73,10 @@ export class EditTemplateComponent extends FieldMakerBase {
 
     this.saveMgr.clearClicked.subscribe(() => {
       this.loadTemplate();
+    });
+
+    this.saveMgr.deleteClicked.subscribe(() => {
+      this.handleTemplateDeletion();
     });
 
     this.stateMgr.stateChanged.subscribe(async (newState) => {
@@ -85,12 +92,10 @@ export class EditTemplateComponent extends FieldMakerBase {
     });
 
     this.templateService.templateChanged.subscribe((template) => {
-      if (template.id === -1) {
-        this.clearAll();
-      } else {
-        this.template = template;
-        this.populateFieldContainers();
-      }
+      this.clearAll();
+      this.template = template;
+      this.populateFieldContainers();
+      this.checkForEdit();
     });
   }
 
@@ -98,6 +103,8 @@ export class EditTemplateComponent extends FieldMakerBase {
     this.RemoveAllPluses();
     
     this.clearLoad();
+
+    this.template = {} as Template;
 
     this.fieldBoxContainerSearch.clear();
     this.fieldBoxContainerLeft.clear();
@@ -183,7 +190,7 @@ export class EditTemplateComponent extends FieldMakerBase {
     newItem.instance.fieldInfo = permTitleBoxSearch;
     permTitleBoxSearch.title = "Tytuł wpisu";
     permTitleBoxSearch.type = BOXES.TEXT;
-    permTitleBoxSearch.position = 1;
+    permTitleBoxSearch.searchPosition = 1;
     permTitleBoxSearch.templateParentId = 0;
     
     this.permBoxes.push(newItem);
@@ -195,7 +202,7 @@ export class EditTemplateComponent extends FieldMakerBase {
     newItem.instance.fieldInfo = permDateBoxSearch;
     permDateBoxSearch.title = "Data dodania";
     permDateBoxSearch.type = BOXES.DATE;
-    permDateBoxSearch.position = 2;
+    permDateBoxSearch.searchPosition = 2;
     permDateBoxSearch.templateParentId = -1;
 
     this.permBoxes.push(newItem);
@@ -291,6 +298,7 @@ export class EditTemplateComponent extends FieldMakerBase {
     if (this.stateMgr.getState() === STATE.TEMPLATE_EDIT) {
       newItem!.instance.isTemplateMade = true;
     }
+    newItem!.instance.isEnabled = true;
 
     newItem!.instance.deleteClicked.subscribe(() => {
       if (this.loadedItems.includes(newItem) || this.loadedSearchItems.includes(newItem)) {
@@ -300,20 +308,41 @@ export class EditTemplateComponent extends FieldMakerBase {
       }
       newItem?.destroy();
       this.createdItems = this.createdItems.filter(ref => ref !== newItem);
+
+      if (newItem!.instance.fieldInfo.searchPosition !== undefined && newItem!.instance.fieldInfo.searchPosition > 0) {
+        this.allRawFieldsForSearch.push(newItem!.instance.fieldInfo);
+      } else {
+        this.allRawFields.push(newItem!.instance.fieldInfo);
+      }
+      this.checkForEdit();
     });
 
+    let newNum = 0;
     switch (column) {
       case this.fieldBoxContainerSearch:
-        newItem.instance.fieldInfo.searchPosition = insertColumn.length;
+        newNum = this.loadedSearchItems.map(item => item.instance.fieldInfo.searchPosition).sort((a, b) => a - b).pop();
+        newItem.instance.fieldInfo.searchPosition = newNum + 1;
         break;
       case this.fieldBoxContainerLeft:
-        newItem.instance.fieldInfo.position = (insertColumn.length - 1) * 3 + 1;
+        newNum = this.loadedItems.filter(item => item.instance.fieldInfo.position !== undefined && (item.instance.fieldInfo.position % 3) === 1).map(item => item.instance.fieldInfo.position).sort((a, b) => a - b).pop();
+        if (newNum === undefined) {
+          newNum = -2;
+        }
+        newItem.instance.fieldInfo.position = newNum + 3;
         break;
       case this.fieldBoxContainerMiddle:
-        newItem.instance.fieldInfo.position = (insertColumn.length - 1) * 3 + 2;
+        newNum = this.loadedItems.filter(item => item.instance.fieldInfo.position !== undefined && (item.instance.fieldInfo.position % 3) === 2).map(item => item.instance.fieldInfo.position).sort((a, b) => a - b).pop();
+        if (newNum === undefined) {
+          newNum = -1;
+        }
+        newItem.instance.fieldInfo.position = newNum + 3;
         break;
       case this.fieldBoxContainerRight:
-        newItem.instance.fieldInfo.position = (insertColumn.length - 1) * 3 + 3;
+        newNum = this.loadedItems.filter(item => item.instance.fieldInfo.position !== undefined && (item.instance.fieldInfo.position % 3) === 0).map(item => item.instance.fieldInfo.position).sort((a, b) => a - b).pop();
+        if (newNum === undefined) {
+          newNum = 0;
+        }
+        newItem.instance.fieldInfo.position = newNum + 3;
         break;
     }
 
@@ -346,7 +375,21 @@ export class EditTemplateComponent extends FieldMakerBase {
     return result;
   }
 
+  checkForEdit() {
+    if (this.loadedItems.length == 0 && this.loadedSearchItems.length == 2 && this.createdItems.length == 0) {
+      this.stateMgr.setEdited(false);
+    } 
+  }
+
   async saveAll(templateTitle: string) {
+    if (!this.validateSearchTemplateFields()) {
+      await this.confirmationModalService.confirm(
+        'Nie wszystkie pola wyszukiwania są obecne na szablonie.'
+      );
+      
+      return;
+    }
+
     let boxList: InsertFieldBoxesDto[] = new Array<InsertFieldBoxesDto>();
     let templateToSave = Object.assign(new Template(), this.template);
   
@@ -369,7 +412,7 @@ export class EditTemplateComponent extends FieldMakerBase {
     }
 
     templateToSave.searchItems = this.loadedSearchItems.map(ref => this.tryExtractFieldBox(ref.instance)).filter(fb => fb !== null) as FieldBox[];
-    templateToSave.searchItems = templateToSave.searchItems.filter(item => item.position !== 1 && item.position !== 2);
+    templateToSave.searchItems = templateToSave.searchItems.filter(item => item.searchPosition !== 1 && item.searchPosition !== 2);
 
     for (let item of templateToSave.searchItems) {
       if (fieldForCheck.find(field => field.id === item.id)) {
@@ -380,8 +423,6 @@ export class EditTemplateComponent extends FieldMakerBase {
 
     templateToSave.name = templateTitle;
 
-    console.log(templateToSave.items);
-    console.log(templateToSave.searchItems);
     this.api.saveNewTemplate(this.loginMgr.getToken() ?? '', templateToSave).then(() => {
       this.stateMgr.setState(STATE.TEMPLATE_VIEW);
     });
@@ -419,5 +460,22 @@ export class EditTemplateComponent extends FieldMakerBase {
       return inst.value as FieldBox;
     }
     return null;
+  }
+
+  handleTemplateDeletion() {
+    this.api.removeTemplate(this.template.id, this.loginMgr.getToken() ?? '').then(() => {
+      this.template = {} as Template;
+      this.templateId = 0;
+      this.clearAll();
+      this.stateMgr.setState(STATE.TEMPLATE_VIEW);
+    });
+  }
+
+  validateSearchTemplateFields() {
+    return this.loadedSearchItems
+      .filter(item => item.instance.fieldInfo.searchPosition !== 1 && item.instance.fieldInfo.searchPosition !== 2)
+      .every(searchItem => 
+        this.loadedItems.some(box => box.instance.fieldInfo.id === searchItem.instance.fieldInfo.id)
+      );
   }
 }

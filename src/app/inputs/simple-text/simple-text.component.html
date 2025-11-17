@@ -6,7 +6,7 @@
             id="simpleTextInput" 
             [placeholder]="fieldInfo.isNumber ? '123' : 'Tekst'" 
             [(ngModel)]="fieldInfo.value" 
-            [disabled]="stateMgr.getState() === STATE.FIELD_VIEW || stateMgr.getState() === STATE.FIELD_EDIT"
+            [disabled]="[STATE.FIELD_EDIT, STATE.FIELD_VIEW, STATE.TEMPLATE_EDIT, STATE.TEMPLATE_VIEW].includes(stateMgr.getState())"
             [type]="fieldInfo.isNumber ? 'number' : 'text'"
         />
     </div>
