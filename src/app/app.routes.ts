@@ -16,4 +16,5 @@ export const routes: Routes = [
     { path: 'search', component: RecordFinderComponent, canActivate: [authGuard] },
     { path: 'adminpanel', component: SuperUserPanelComponent, canActivate: [authGuard, adminGuard] },
     { path: 'templates', component: EditTemplateComponent, canActivate: [authGuard, adminGuard] },
+    { path: 'search/add', component: RecordFinderComponent, canActivate: [authGuard] },
 ];

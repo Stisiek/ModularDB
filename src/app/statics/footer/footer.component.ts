@@ -26,7 +26,7 @@ export class FooterComponent {
   constructor(private saveMgr: SaveMgrService, private stateMgr: StateMgrService, public confirmationModalService: ConfirmationModalService, private api: Client, private templateService: TemplateService) { }
 
   ngOnInit() {
-    this.loadTemplateName();
+    this.loadTemplateNames();
   }
 
   isEditing() {
@@ -43,13 +43,16 @@ export class FooterComponent {
 
   removeTemplate() {
     delete this.temps[this.selectedTemplateId];
+    
+    this.selectedTemplateId = 'newTemplate';
+    this.newTemplateName = '';
+    this.oldTemplateName = '';
   }
 
   showEditButton() : boolean {
     return this.stateMgr.getState() === STATE.FIELD_VIEW || 
     this.stateMgr.getState() === STATE.TEMPLATE_VIEW || 
-    this.stateMgr.getState() === STATE.RECORD_VIEW || 
-    this.stateMgr.getState() === STATE.SUPER_USER_PANEL_VIEW;
+    this.stateMgr.getState() === STATE.RECORD_VIEW;
   }
 
   editBtnClicked() {
@@ -74,13 +77,22 @@ export class FooterComponent {
     }
 
     this.stateMgr.setEdited(false);
+    this.newTemplateName = this.oldTemplateName;
   }
 
   @Confirmable('Czy na pewno chcesz zapisać zmiany?')
   saveBtnClicked() {
     this.stateMgr.setEdited(false);
     this.saveMgr.saveBtnClicked(this.newTemplateName);
-    this.temps[this.selectedTemplateId] = this.newTemplateName;
+
+    setTimeout(() => {
+      this.loadTemplateNames();
+    }, 500);
+
+    setTimeout(() => {
+      let key = this.getKeyByValue(this.newTemplateName);
+      this.selectedTemplateId = key ? key : 'newTemplate';
+    }, 1000);
   }
 
   @Confirmable('Czy na pewno chcesz zresetować wartość wszystkich pól?')
@@ -92,7 +104,6 @@ export class FooterComponent {
   deleteBtnClicked() {
     this.saveMgr.deleteTemplateBtnClicked();
     this.removeTemplate();
-    this.selectedTemplateId = 'newTemplate';
   }
 
   isSaveEnabled(): boolean {
@@ -115,12 +126,17 @@ export class FooterComponent {
     return false;
   }
 
-  loadTemplateName() {
+  loadTemplateNames() {
     this.api.getAllTemplatesNames().then(result => {
       for (let temp of result) {
         this.temps[temp.id ?? ''] = temp.title ?? '';
       }
     });
+  }
+
+  getKeyByValue(value: string): string | undefined {
+    const entry = Object.entries(this.temps).find(([key, val]) => val === value);
+    return entry ? entry[0] : undefined;
   }
 
   async onTemplateSelect(templateId: string) {

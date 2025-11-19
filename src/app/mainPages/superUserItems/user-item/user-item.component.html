@@ -1,0 +1,18 @@
+<div class="user-box">
+    <div class="user-info" (click)="selectUser()">
+        <div class="top-row">
+            <label>{{ userData.name }} {{ userData.surname }}</label>
+            <label style="float: right; color: gray; font-size: 14px;">Data zatrudnienia: {{ userData.hireDate?.getMonth() }}/{{ userData.hireDate?.getFullYear() }}</label>
+        </div>
+        <div class="bottom-row">
+            <label style="font-size: 14px; margin-bottom: 4px; color: lightgray">Login: {{ userData.login }} Uprawnienia: {{ userData.permissionLevel | permnissions }}</label>
+            <label style="float: right;" [style]="userData.isActive ? 'color: green;' : 'color: red'">{{ userData.isActive ? 'Aktywny' : 'Nieaktywny' }}</label>
+        </div>
+        <div (click)="$event.stopPropagation()">
+            <button (click)="deactivateOrActivateUser(true)" [disabled]="userData.isActive" style="color: green">Aktywuj</button>
+            <button (click)="deactivateOrActivateUser(false)" [disabled]="!userData.isActive" style="color: red">Dezaktywuj</button>
+            <button (click)="resetPassword()">Resetuj hasło</button>
+            <button (click)="deleteUser()" style="color: red; float: right;">Usuń użytkownika</button>
+        </div>
+    </div>
+</div>

@@ -1,3 +1,61 @@
-.add-employee-panel input {
-    
+.add-employee-panel {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    width: calc(50% - 10px);
+    margin: 5px;
+}
+
+.user-box {
+    display: flex;
+    flex-direction: row;
+    justify-content: end;
+    margin: auto;
+    padding: 20px;
+    width: 60%;
+    float: right;
+}
+
+.add-employee-panel input,
+.add-employee-panel select {
+    width: 100%;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    background: #ccc;
+}
+
+.add-employee-panel button, 
+.save-btn {
+    width: calc(50% - 10px);
+    margin: 5px;
+    border-radius: 5px;
+    background: #222;
+    color: white;
+    border: 1px solid black;
+}
+
+.add-employee-panel button:hover,
+.save-btn:hover {
+    cursor: pointer;
+    background: #444;
+}
+
+.add-employee-panel form {
+    width: 100%;
+}
+
+.settings-box {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    margin: auto;
+    padding: 20px;
+    width: 40%;
+    float: left;
+}
+
+.employees-panel {
+    width: 50%;
+    float: left;
+    border-right: 1px solid black;
 }

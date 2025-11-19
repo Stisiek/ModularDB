@@ -1,0 +1,44 @@
+.tiles-page {
+    margin-top: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 80vh;
+}
+
+.tiles-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  justify-content: center;
+  padding: 16px;
+}
+
+.tiles-container > *:hover {
+    box-shadow: 0 4px 12px rgba(255,255,255,0.3);
+    cursor: pointer;
+}
+
+.tiles-container > * {
+    border: 2px solid black;
+    border-radius: 10px;
+    padding: 16px;
+    background: #444;
+    width: clamp(300px, 30%, 400px);
+
+    display: flex;
+    flex-direction: column;
+}
+
+.tiles-container > * > h1 {
+    display: flex;
+    justify-self: end;
+    align-self: flex-end;
+    margin-top: auto;
+}
+
+.tiles-container > * > p {
+    display: flex;
+    justify-self: start;
+    color: #aaa;
+}

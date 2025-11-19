@@ -1,4 +1,4 @@
-export function Confirmable(message: string = 'Czy na pewno?') {
+export function Confirmable(message: string = 'Czy na pewno?', onlyInfo: boolean = false) {
   return function (
     target: any,
     propertyKey: string,
@@ -14,6 +14,11 @@ export function Confirmable(message: string = 'Czy na pewno?') {
         return;
       }
       
+      if (onlyInfo) {
+        await modalService.information(message);
+        return;
+      }
+
       const confirmed = await modalService.confirm(message);
       
       if (confirmed) {

@@ -27,4 +27,23 @@ export class ConfirmationModalService {
       document.body.appendChild(componentRef.location.nativeElement);
     });
   }
+
+  async information(message: string): Promise<boolean> {
+    return new Promise<boolean>((resolve) => {
+      const componentRef = createComponent(ConfirmationModalComponent, {
+        environmentInjector: this.injector
+      });
+
+      componentRef.instance.message = message;
+      componentRef.instance.isInfoOnly = true;
+      componentRef.instance.confirmed.subscribe((result: boolean) => {
+        this.appRef.detachView(componentRef.hostView);
+        componentRef.destroy();
+        resolve(result);
+      });
+
+      this.appRef.attachView(componentRef.hostView);
+      document.body.appendChild(componentRef.location.nativeElement);
+    });
+  }
 }

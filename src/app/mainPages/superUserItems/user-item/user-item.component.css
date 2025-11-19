@@ -1,0 +1,22 @@
+.user-info button {
+    border-radius: 10px;
+    background: transparent;
+    border: 1px solid white;
+    color: white;
+    margin-right: 2px;
+}
+
+.user-info button:disabled {
+    color: #555 !important;
+    cursor: not-allowed;
+}
+
+.user-info {
+    background: #222;
+    border-radius: 5px;
+    border: 1px solid black;
+    padding: 5px;
+    margin-bottom: 10px;
+    margin: 5px;
+    height: min-content;
+}

@@ -1,1 +1,29 @@
-<p>tiles-page works!</p>
+<div class="tiles-page">
+    <div class="tiles-container">
+        <div (click)="goSomewhereElse(STATE.MAIN_VIEW)">
+            <h2>Wyszukaj</h2>
+            <p>Wyszukaj informacje w bazie</p>
+            <h1>🔍</h1>
+        </div>
+        <div (click)="goSomewhereElse(STATE.RECORD_CREATE)">
+            <h2>Dodaj</h2>
+            <p>Dodaj coś do bazy</p>
+            <h1>➕</h1>
+        </div>
+        <div (click)="goSomewhereElse(STATE.TEMPLATE_VIEW)">
+            <h2>Szablony</h2>
+            <p>Edytuj szablony</p>
+            <h1>📋</h1>
+        </div>
+        <div (click)="goSomewhereElse(STATE.FIELD_VIEW)">
+            <h2>Pola danych</h2>
+            <p>Zarządzaj polami danych</p>
+            <h1>🗂️</h1>
+        </div>
+        <div *ngIf="isSuperUser()" (click)="goSomewhereElse(STATE.SUPER_USER_PANEL_VIEW)">
+            <h2>Zarządzaj</h2>
+            <p>Zarządzaj użytkownikami i ustawieniami</p>
+            <h1>⚙️</h1>
+        </div>
+    </div>
+</div>

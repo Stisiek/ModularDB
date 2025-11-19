@@ -2,9 +2,12 @@
     <div class="modal-content">
         <h3>Uwaga</h3>
         <p>{{ message }}</p>
-        <div class="modal-buttons">
+        <div class="modal-buttons" *ngIf="!isInfoOnly">
             <button (click)="onConfirm()" class="btn-confirm">Tak</button>
             <button (click)="onCancel()" class="btn-cancel">Nie</button>
+        </div>
+        <div *ngIf="isInfoOnly">
+            <button (click)="onOk()" class="btn-confirm">OK</button>
         </div>
     </div>
 </div>

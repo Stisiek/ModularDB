@@ -134,7 +134,7 @@ export class EditTemplateComponent extends FieldMakerBase {
     }
 
     for (let item of this.loadedSearchItems) {
-      if (item.instance.fieldInfo.position == 1 || item.instance.fieldInfo.position == 2) {
+      if (item.instance.fieldInfo.searchPosition == 1 || item.instance.fieldInfo.searchPosition == 2) {
         continue;
       }
       item.instance.isTemplateMade = setMode;
@@ -383,7 +383,7 @@ export class EditTemplateComponent extends FieldMakerBase {
 
   async saveAll(templateTitle: string) {
     if (!this.validateSearchTemplateFields()) {
-      await this.confirmationModalService.confirm(
+      await this.confirmationModalService.information(
         'Nie wszystkie pola wyszukiwania są obecne na szablonie.'
       );
       
